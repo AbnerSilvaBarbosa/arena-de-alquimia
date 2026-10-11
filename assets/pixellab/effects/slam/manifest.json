@@ -1,0 +1,122 @@
+{
+ "app": "PixelLab VFX Creator",
+ "name": "Arena Alphonse Ground Slam",
+ "fps": 14,
+ "frame_ms": 71,
+ "frames": 12,
+ "loop": false,
+ "canvas": {
+  "w": 182,
+  "h": 75
+ },
+ "anchor": {
+  "kind": "origin",
+  "x": 91,
+  "y": 37
+ },
+ "clips": [
+  {
+   "name": "whole",
+   "title": "the whole effect, no sprite",
+   "depth": "both",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 11,
+   "frame": {
+    "w": 176,
+    "h": 69
+   },
+   "sheets": [
+    {
+     "file": "whole.png",
+     "first_frame": 0,
+     "frames": 11,
+     "columns": 4,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -88,
+    "y": -34
+   }
+  },
+  {
+   "name": "part-shockwave_ring",
+   "title": "the shockwave ring part",
+   "part": "shockwave_ring",
+   "depth": "both",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 11,
+   "frame": {
+    "w": 176,
+    "h": 68
+   },
+   "sheets": [
+    {
+     "file": "part-shockwave_ring.png",
+     "first_frame": 0,
+     "frames": 11,
+     "columns": 4,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -88,
+    "y": -34
+   }
+  },
+  {
+   "name": "part-ground_cracks",
+   "title": "the ground cracks part",
+   "part": "ground_cracks",
+   "depth": "behind",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 9,
+   "frame": {
+    "w": 110,
+    "h": 40
+   },
+   "sheets": [
+    {
+     "file": "part-ground_cracks.png",
+     "first_frame": 0,
+     "frames": 9,
+     "columns": 3,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -54,
+    "y": -19
+   }
+  },
+  {
+   "name": "part-debris_burst",
+   "title": "the debris burst part",
+   "part": "debris_burst",
+   "depth": "front",
+   "loop": false,
+   "start_frame": 2,
+   "frames": 7,
+   "frame": {
+    "w": 63,
+    "h": 49
+   },
+   "sheets": [
+    {
+     "file": "part-debris_burst.png",
+     "first_frame": 0,
+     "frames": 7,
+     "columns": 3,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -25,
+    "y": -14
+   }
+  }
+ ]
+}

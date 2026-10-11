@@ -1,0 +1,96 @@
+{
+ "app": "PixelLab VFX Creator",
+ "name": "Arena Guard Block",
+ "fps": 16,
+ "frame_ms": 63,
+ "frames": 12,
+ "loop": false,
+ "canvas": {
+  "w": 37,
+  "h": 38
+ },
+ "anchor": {
+  "kind": "origin",
+  "x": 18,
+  "y": 19
+ },
+ "clips": [
+  {
+   "name": "whole",
+   "title": "the whole effect, no sprite",
+   "depth": "both",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 12,
+   "frame": {
+    "w": 31,
+    "h": 32
+   },
+   "sheets": [
+    {
+     "file": "whole.png",
+     "first_frame": 0,
+     "frames": 12,
+     "columns": 4,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -15,
+    "y": -16
+   }
+  },
+  {
+   "name": "part-bubble_shield",
+   "title": "the bubble shield part",
+   "part": "bubble_shield",
+   "depth": "both",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 12,
+   "frame": {
+    "w": 31,
+    "h": 32
+   },
+   "sheets": [
+    {
+     "file": "part-bubble_shield.png",
+     "first_frame": 0,
+     "frames": 12,
+     "columns": 4,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -15,
+    "y": -16
+   }
+  },
+  {
+   "name": "part-spark_burst",
+   "title": "the spark burst part",
+   "part": "spark_burst",
+   "depth": "front",
+   "loop": false,
+   "start_frame": 1,
+   "frames": 10,
+   "frame": {
+    "w": 31,
+    "h": 21
+   },
+   "sheets": [
+    {
+     "file": "part-spark_burst.png",
+     "first_frame": 0,
+     "frames": 10,
+     "columns": 4,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -15,
+    "y": -10
+   }
+  }
+ ]
+}

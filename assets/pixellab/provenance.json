@@ -1,0 +1,25 @@
+{
+  "generator": "PixelLab",
+  "characters": {
+    "Edward": "f89aa2d4-646a-4313-935e-41801f432a7d",
+    "Alphonse": "e1ae5b6a-632c-4dd1-a9f9-341fb822f684"
+  },
+  "ui_gallery_asset": "66d5cf1c-a8b7-48c5-965c-5ef867902e2f",
+  "stone_drawing": "78cf2928-3257-417d-8ef5-8fdd2426d640",
+  "effects": {
+    "alchemy": "6921e865-5c95-4365-b920-daa10bb8ac37",
+    "slam": "2cfd4def-f452-4500-8ec3-e4b514c147d8",
+    "slash": "410a4061-67d3-4619-9f84-bb3e279daa51",
+    "dash": "f3004301-3590-4b36-a429-f01faf7ea8a5",
+    "spikes": "afb494db-bdce-4760-8a2f-1eaec1506453",
+    "hit": "30f17efb-415a-4ef7-8fb9-89575449ec28",
+    "block": "988059f4-b3f3-4edb-8875-4f6c351e9ee4"
+  },
+  "note": "Existing generated asset identifiers only. No credential is required by the game.",
+  "environment_jobs": {
+    "crate": "069acfaf-e577-4cf8-9e55-356741acb10b",
+    "floor": "9c6d8882-3572-45c1-8fe8-c7194cd8b5c1"
+  },
+  "icon_drawing": "c6506b5a-df32-4480-95b7-c86e125316c2",
+  "floor_palette_correction": "19f96319-0781-403c-ba79-ca5cdf278f9a"
+}

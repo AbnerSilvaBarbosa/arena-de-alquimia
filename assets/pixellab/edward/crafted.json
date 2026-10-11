@@ -1,0 +1,580 @@
+{
+  "hurt": {
+    "south": {
+      "sheet": "res://assets/pixellab/edward/crafted/hurt/south.png",
+      "frame_size": [
+        80,
+        80
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        40,
+        72
+      ],
+      "fps": 22.222222
+    },
+    "east": {
+      "sheet": "res://assets/pixellab/edward/crafted/hurt/east.png",
+      "frame_size": [
+        80,
+        80
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        40,
+        72
+      ],
+      "fps": 22.222222
+    },
+    "north": {
+      "sheet": "res://assets/pixellab/edward/crafted/hurt/north.png",
+      "frame_size": [
+        80,
+        80
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        40,
+        72
+      ],
+      "fps": 22.222222
+    },
+    "west": {
+      "sheet": "res://assets/pixellab/edward/crafted/hurt/west.png",
+      "frame_size": [
+        80,
+        80
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        40,
+        72
+      ],
+      "fps": 22.222222
+    }
+  },
+  "ko": {
+    "south": {
+      "sheet": "res://assets/pixellab/edward/crafted/ko/south.png",
+      "frame_size": [
+        128,
+        96
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        64,
+        80
+      ],
+      "fps": 13.0
+    },
+    "east": {
+      "sheet": "res://assets/pixellab/edward/crafted/ko/east.png",
+      "frame_size": [
+        128,
+        96
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        64,
+        80
+      ],
+      "fps": 13.0
+    },
+    "north": {
+      "sheet": "res://assets/pixellab/edward/crafted/ko/north.png",
+      "frame_size": [
+        128,
+        96
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        64,
+        80
+      ],
+      "fps": 13.0
+    },
+    "west": {
+      "sheet": "res://assets/pixellab/edward/crafted/ko/west.png",
+      "frame_size": [
+        128,
+        96
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        64,
+        80
+      ],
+      "fps": 13.0
+    }
+  },
+  "dash": {
+    "south": {
+      "sheet": "res://assets/pixellab/edward/crafted/dash/south.png",
+      "frame_size": [
+        96,
+        96
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        48,
+        80
+      ],
+      "fps": 25.0
+    },
+    "east": {
+      "sheet": "res://assets/pixellab/edward/crafted/dash/east.png",
+      "frame_size": [
+        96,
+        96
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        48,
+        80
+      ],
+      "fps": 25.0
+    },
+    "north": {
+      "sheet": "res://assets/pixellab/edward/crafted/dash/north.png",
+      "frame_size": [
+        96,
+        96
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        48,
+        80
+      ],
+      "fps": 25.0
+    },
+    "west": {
+      "sheet": "res://assets/pixellab/edward/crafted/dash/west.png",
+      "frame_size": [
+        96,
+        96
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        48,
+        80
+      ],
+      "fps": 25.0
+    }
+  },
+  "idle": {
+    "south": {
+      "sheet": "res://assets/pixellab/edward/crafted/idle/south.png",
+      "frame_size": [
+        64,
+        64
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.125
+    },
+    "east": {
+      "sheet": "res://assets/pixellab/edward/crafted/idle/east.png",
+      "frame_size": [
+        64,
+        64
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.125
+    },
+    "north": {
+      "sheet": "res://assets/pixellab/edward/crafted/idle/north.png",
+      "frame_size": [
+        64,
+        64
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.125
+    },
+    "west": {
+      "sheet": "res://assets/pixellab/edward/crafted/idle/west.png",
+      "frame_size": [
+        64,
+        64
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.125
+    },
+    "south-east": {
+      "sheet": "res://assets/pixellab/edward/crafted/idle/south-east.png",
+      "frame_size": [
+        64,
+        64
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.125
+    },
+    "north-east": {
+      "sheet": "res://assets/pixellab/edward/crafted/idle/north-east.png",
+      "frame_size": [
+        64,
+        64
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.125
+    },
+    "north-west": {
+      "sheet": "res://assets/pixellab/edward/crafted/idle/north-west.png",
+      "frame_size": [
+        64,
+        64
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.125
+    },
+    "south-west": {
+      "sheet": "res://assets/pixellab/edward/crafted/idle/south-west.png",
+      "frame_size": [
+        64,
+        64
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.125
+    }
+  },
+  "guard": {
+    "south": {
+      "sheet": "res://assets/pixellab/edward/crafted/guard/south.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.333333
+    },
+    "east": {
+      "sheet": "res://assets/pixellab/edward/crafted/guard/east.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.333333
+    },
+    "north": {
+      "sheet": "res://assets/pixellab/edward/crafted/guard/north.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.333333
+    },
+    "west": {
+      "sheet": "res://assets/pixellab/edward/crafted/guard/west.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.333333
+    }
+  },
+  "grab": {
+    "south": {
+      "sheet": "res://assets/pixellab/edward/crafted/grab/south.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 10.0
+    },
+    "east": {
+      "sheet": "res://assets/pixellab/edward/crafted/grab/east.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 10.0
+    },
+    "north": {
+      "sheet": "res://assets/pixellab/edward/crafted/grab/north.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 10.0
+    },
+    "west": {
+      "sheet": "res://assets/pixellab/edward/crafted/grab/west.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 10.0
+    }
+  },
+  "pickup": {
+    "south": {
+      "sheet": "res://assets/pixellab/edward/crafted/pickup/south.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 22.222222
+    },
+    "east": {
+      "sheet": "res://assets/pixellab/edward/crafted/pickup/east.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 22.222222
+    },
+    "north": {
+      "sheet": "res://assets/pixellab/edward/crafted/pickup/north.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 22.222222
+    },
+    "west": {
+      "sheet": "res://assets/pixellab/edward/crafted/pickup/west.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 22.222222
+    }
+  },
+  "carry": {
+    "south": {
+      "sheet": "res://assets/pixellab/edward/crafted/carry/south.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.333333
+    },
+    "east": {
+      "sheet": "res://assets/pixellab/edward/crafted/carry/east.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.333333
+    },
+    "north": {
+      "sheet": "res://assets/pixellab/edward/crafted/carry/north.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.333333
+    },
+    "west": {
+      "sheet": "res://assets/pixellab/edward/crafted/carry/west.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 3.333333
+    }
+  },
+  "carry_walk": {
+    "south": {
+      "sheet": "res://assets/pixellab/edward/crafted/carry_walk/south.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 10.0
+    },
+    "east": {
+      "sheet": "res://assets/pixellab/edward/crafted/carry_walk/east.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 10.0
+    },
+    "north": {
+      "sheet": "res://assets/pixellab/edward/crafted/carry_walk/north.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 10.0
+    },
+    "west": {
+      "sheet": "res://assets/pixellab/edward/crafted/carry_walk/west.png",
+      "frame_size": [
+        64,
+        72
+      ],
+      "columns": 2,
+      "frame_count": 4,
+      "anchor": [
+        32,
+        60
+      ],
+      "fps": 10.0
+    }
+  }
+}

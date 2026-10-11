@@ -1,0 +1,148 @@
+{
+ "app": "PixelLab VFX Creator",
+ "name": "Arena Alchemy Transmutation",
+ "fps": 12,
+ "frame_ms": 83,
+ "frames": 12,
+ "loop": false,
+ "canvas": {
+  "w": 144,
+  "h": 60
+ },
+ "anchor": {
+  "kind": "origin",
+  "x": 72,
+  "y": 30
+ },
+ "clips": [
+  {
+   "name": "whole",
+   "title": "the whole effect, no sprite",
+   "depth": "both",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 12,
+   "frame": {
+    "w": 138,
+    "h": 54
+   },
+   "sheets": [
+    {
+     "file": "whole.png",
+     "first_frame": 0,
+     "frames": 12,
+     "columns": 4,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -69,
+    "y": -27
+   }
+  },
+  {
+   "name": "part-rune_circle",
+   "title": "the rune circle part",
+   "part": "rune_circle",
+   "depth": "behind",
+   "loop": false,
+   "start_frame": 0,
+   "frames": 12,
+   "frame": {
+    "w": 138,
+    "h": 54
+   },
+   "sheets": [
+    {
+     "file": "part-rune_circle.png",
+     "first_frame": 0,
+     "frames": 12,
+     "columns": 4,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -69,
+    "y": -27
+   }
+  },
+  {
+   "name": "part-charge_up",
+   "title": "the charge up part",
+   "part": "charge_up",
+   "depth": "front",
+   "loop": false,
+   "start_frame": 1,
+   "frames": 11,
+   "frame": {
+    "w": 39,
+    "h": 39
+   },
+   "sheets": [
+    {
+     "file": "part-charge_up.png",
+     "first_frame": 0,
+     "frames": 11,
+     "columns": 4,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -19,
+    "y": -19
+   }
+  },
+  {
+   "name": "part-lightning_arcs",
+   "title": "the lightning arcs part",
+   "part": "lightning_arcs",
+   "depth": "front",
+   "loop": false,
+   "start_frame": 2,
+   "frames": 7,
+   "frame": {
+    "w": 25,
+    "h": 29
+   },
+   "sheets": [
+    {
+     "file": "part-lightning_arcs.png",
+     "first_frame": 0,
+     "frames": 7,
+     "columns": 3,
+     "rows": 3
+    }
+   ],
+   "offset": {
+    "x": -12,
+    "y": -15
+   }
+  },
+  {
+   "name": "part-spark_burst",
+   "title": "the spark burst part",
+   "part": "spark_burst",
+   "depth": "front",
+   "loop": false,
+   "start_frame": 3,
+   "frames": 4,
+   "frame": {
+    "w": 29,
+    "h": 20
+   },
+   "sheets": [
+    {
+     "file": "part-spark_burst.png",
+     "first_frame": 0,
+     "frames": 4,
+     "columns": 2,
+     "rows": 2
+    }
+   ],
+   "offset": {
+    "x": -14,
+    "y": -9
+   }
+  }
+ ]
+}

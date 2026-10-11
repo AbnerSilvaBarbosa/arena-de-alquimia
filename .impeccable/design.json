@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-11T09:49:39.876823+00:00",
+  "title": "Design System: Arena de Alquimia",
+  "extensions": {
+    "typographyMeta": {
+      "display": {
+        "displayName": "Silkscreen Regular",
+        "purpose": "Menu 32 pixels lógicos; títulos 24. OFL local em assets/fonts/OFL.txt."
+      }
+    },
+    "shadows": [
+      {
+        "name": "combat-banner",
+        "value": "Godot font_shadow_color #121a21; offset (2, 2)",
+        "purpose": "Sombra de texto do banner de combate; painéis não têm sombra."
+      }
+    ],
+    "motion": [
+      {
+        "name": "arena-preview-camera",
+        "value": "x = 1024 + sin(time * 0.1) * 100; y = 768 + cos(time * 0.13) * 65",
+        "purpose": "Deslocamento lento do fundo procedural nos menus."
+      }
+    ],
+    "nativePlatform": {
+      "engine": "Godot",
+      "logicalViewport": [
+        960,
+        540
+      ],
+      "minimumWindow": [
+        960,
+        540
+      ],
+      "initialWindow": [
+        1280,
+        720
+      ],
+      "stretchMode": "canvas_items",
+      "componentSource": "scripts/main.gd + scripts/pixel_ui.gd",
+      "arenaSource": "scripts/arena.gd",
+      "note": "Documentação nativa; atlas PixelLab normativo para superfícies, sem CSS ou ramps sintetizados."
+    },
+    "nativeAssets": {
+      "uiAtlas": "assets/pixellab/ui/atlas.png",
+      "atlasSize": [
+        256,
+        128
+      ],
+      "panelSlice": 12,
+      "buttonSlice": 8,
+      "characterStates": 13,
+      "effects": 7,
+      "bodyFont": "Godot ThemeDB fallback font",
+      "provenance": "assets/pixellab/README.md",
+      "animationScope": "Idle 8 direções; ações 4; poses compartilhadas/repetidas no primeiro MVP; âncoras individuais por frame."
+    }
+  },
+  "components": [],
+  "narrative": {
+    "northStar": "Pátio militar de alquimia",
+    "overview": "Pátio militar de pedra, interface azul-marinho com cobre, texto creme e alquimia ciano. O casaco vermelho de Edward e a armadura fria de Alphonse distinguem os combatentes. A arena e a leitura dos ataques têm prioridade.\n\nA implementação nativa usa exports locais do PixelLab para personagens, efeitos, UI e cenário. Este é o primeiro conjunto do MVP: poses compartilhadas e derivações continuam sujeitas a refinamento; áudio sintetizado permanece provisório. O rodapé ainda identifica arte e áudio provisórios. Windows é a plataforma principal, macOS a de desenvolvimento; esta documentação não confirma teste nativo no Windows.\n\nA direção deriva dos conceitos e da referência aceitos. Não houve sorteio de concept seed nem rodada formal de comps, conforme PRODUCT.md. A disposição recente de ship se limita aos três itens revisados — nomes no mundo, fonte e proveniência — e não constitui aprovação completa de animação ou plataforma.",
+    "keyCharacteristics": [
+      "Molduras pixeladas opacas, azul-marinho e cobre.",
+      "Títulos Silkscreen e leitura com fonte nativa do Godot.",
+      "Retratos, ícones e emblema integrados aos controles nativos.",
+      "Alquimia ciano e avisos de alcance ligados à simulação."
+    ],
+    "rules": [
+      {
+        "name": "Legibility",
+        "body": "Instruções inferiores e nomes no mundo precisam de fundos escuros próprios; não colocar texto claro diretamente sobre as variações do chão.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do usar os exports locais e nine-slice existentes como fonte visual.",
+      "Do manter Silkscreen 32 no menu, 24 nos títulos e fonte nativa na leitura.",
+      "Do verificar 960 × 540, nomes largos com reticências e separação dos nomes próximos.",
+      "Do preservar avisos de alcance, placar explícito e a identificação provisória."
+    ],
+    "donts": [
+      "Don't apresentar áudio sintetizado ou animações derivadas como acabamento final.",
+      "Don't afirmar oito direções únicas para ações, geração ao vivo ou teste nativo Windows sem evidência.",
+      "Don't inventar aprovação de concept seed/comps ou ampliar a disposição de ship dos três itens revisados.",
+      "Don't substituir molduras opacas por cartões translúcidos, UI web ou decoração que encubra combate."
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+[Unit]
+Description=Arena de Alquimia — multiplayer
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=arena
+Group=arena
+WorkingDirectory=/opt/arena/current
+ExecStart=/opt/arena/current/arena-server --headless -- --server --port=7000
+Restart=on-failure
+RestartSec=3
+StateDirectory=arena
+Environment=XDG_DATA_HOME=/var/lib/arena/data
+Environment=XDG_CACHE_HOME=/var/lib/arena/cache
+MemoryMax=512M
+CPUQuota=100%
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/arena
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=arena
+
+[Install]
+WantedBy=multi-user.target

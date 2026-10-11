@@ -1,0 +1,10 @@
+.godot/
+builds/
+*.log
+.DS_Store
+__pycache__/
+*.pyc
+.env
+.env.*
+.local/
+.impeccable/review/
