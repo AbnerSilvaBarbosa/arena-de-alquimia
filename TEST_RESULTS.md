@@ -28,3 +28,11 @@ O teste ampliado de partida/revanche pode ser reproduzido com `python3 tests/run
 ## Pacotes e credenciais
 
 Exports Windows e Linux concluídos sem erros. Varredura do projeto e dos arquivos descompactados dos três ZIPs não encontrou a credencial do PixelLab; o arquivo temporário usado para autenticação foi removido. O código-fonte inclui os assets locais e a licença da fonte, sem cache do Godot ou templates binários.
+
+## Escala 0.1.1 — 12/10/2026
+
+29 verificações de câmera aprovadas: projeção/inversão da mira, transformação de desenho, enquadramento de abertura em 100%/150%/200% e preview de menus sem zoom. As 32 verificações de simulação seguem aprovadas. Capturas de arena, objetos, habilidades e Opções conferidas em 1280 × 720 e 960 × 540, incluindo nomes longos. A medição anterior de FPS permanece referente à versão 0.1; não foi refeita neste ajuste visual. O mundo continua 2048 × 1536.
+
+O cliente 0.1.1 exportado, carregado como main-pack pelo Godot no Mac, passou nas 29 verificações de câmera e nas 1.083 verificações de assets. Exportação Windows/Linux concluída sem erros. Execução nativa em Windows/Linux continua pendente.
+
+Servidor 0.1.1 empacotado: partida 2–0 e revanche aprovadas nos dois clientes, com 361/363 snapshots recebidos, 100 ms RTT e 1% de perda. Rejeições de sala cheia, código inexistente e protocolo incompatível também aprovadas.

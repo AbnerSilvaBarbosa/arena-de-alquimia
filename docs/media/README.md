@@ -1,6 +1,6 @@
 # Mídia do README
 
-Capturas atuais: `gameplay.png`, `menu.png`, `lobby.png` e `objects.png`, produzidas pelo renderer do Godot a partir do MVP 0.1.
+Capturas atuais: `gameplay.png`, `menu.png`, `lobby.png` e `objects.png`, produzidas pelo renderer do Godot a partir do MVP (combate atualizado para 0.1.1, escala 150%; lobby mantém a composição original).
 
 `combat.mp4` / `combat.gif`: 13 segundos de demonstração automatizada, com três situações preparadas na simulação real. Sem jogadores humanos, sem conexão à VPS. O roteiro usa movimento, habilidades, golpes, defesa, agarrão e objetos. Os cortes reiniciam a situação e não representam uma partida contínua.
 

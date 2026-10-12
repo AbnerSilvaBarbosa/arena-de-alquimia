@@ -55,6 +55,20 @@
       "bodyFont": "Godot ThemeDB fallback font",
       "provenance": "assets/pixellab/README.md",
       "animationScope": "Idle 8 direções; ações 4; poses compartilhadas/repetidas no primeiro MVP; âncoras individuais por frame."
+    },
+    "arenaScale": {
+      "default": 1.5,
+      "min": 1.0,
+      "max": 2.0,
+      "step": 0.25,
+      "optionsPanel": [
+        230,
+        28,
+        500,
+        484
+      ],
+      "hudScaled": false,
+      "menuPreviewScale": 1.0
     }
   },
   "components": [],

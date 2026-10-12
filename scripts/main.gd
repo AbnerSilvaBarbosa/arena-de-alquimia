@@ -22,6 +22,7 @@ var local_server_pid := -1
 var volume := 0.7
 var effects_volume := 0.65
 var music_volume := 0.18
+var arena_zoom := 1.5
 var previous_hp: Dictionary = {}
 var captured := false
 var capture_path := ""
@@ -63,6 +64,7 @@ func _ready() -> void:
 	get_tree().auto_accept_quit = false
 	DisplayServer.window_set_min_size(Vector2i(960, 540))
 	arena = ArenaView.new()
+	arena.zoom_factor = arena_zoom
 	add_child(arena)
 	sound = ArenaSound.new()
 	add_child(sound)
@@ -250,7 +252,7 @@ func show_menu() -> void:
 	box.add_child(row)
 	row.add_child(button("Opções", show_options, 180))
 	row.add_child(button("Sair", quit_game, 180))
-	var footer := label("PROTÓTIPO 0.1  /  ARTE E ÁUDIO PROVISÓRIOS", 12, TEXT)
+	var footer := label("PROTÓTIPO %s  /  ARTE E ÁUDIO PROVISÓRIOS" % ProjectSettings.get_setting("application/config/version", "0.1"), 12, TEXT)
 	footer.position = Vector2(54, 514)
 	ui.add_child(footer)
 
@@ -618,7 +620,7 @@ func show_options() -> void:
 	screen = "options"
 	clear_ui()
 	veil()
-	var col := column(panel(ui, Vector2(230, 52), Vector2(500, 436)), 10)
+	var col := column(panel(ui, Vector2(230, 28), Vector2(500, 484)), 10)
 	col.add_child(label("Opções", 32))
 	for item in [["Volume geral", volume, "master"], ["Música", music_volume, "music"], ["Efeitos", effects_volume, "effects"]]:
 		col.add_child(label(item[0], 16, MUTED))
@@ -643,6 +645,21 @@ func show_options() -> void:
 				sound.play("ui")
 			save_settings())
 		col.add_child(slider)
+	var zoom_label := label("Escala da arena: %d%%" % roundi(arena_zoom * 100), 16, MUTED)
+	col.add_child(zoom_label)
+	var zoom_slider := HSlider.new()
+	zoom_slider.min_value = 1.0
+	zoom_slider.max_value = 2.0
+	zoom_slider.step = 0.25
+	zoom_slider.value = arena_zoom
+	zoom_slider.custom_minimum_size.y = 26
+	zoom_slider.tooltip_text = "Aumenta personagens e cenário; a interface mantém seu tamanho."
+	zoom_slider.value_changed.connect(func(value):
+		arena_zoom = value
+		arena.zoom_factor = value
+		zoom_label.text = "Escala da arena: %d%%" % roundi(value * 100)
+		save_settings())
+	col.add_child(zoom_slider)
 	var full := CheckButton.new()
 	full.text = "Tela cheia"
 	full.button_pressed = DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_FULLSCREEN
@@ -735,6 +752,7 @@ func load_settings() -> void:
 		volume = float(config.get_value("audio", "volume", volume))
 		effects_volume = float(config.get_value("audio", "effects", effects_volume))
 		music_volume = float(config.get_value("audio", "music", music_volume))
+		arena_zoom = clampf(float(config.get_value("video", "arena_zoom", arena_zoom)), 1.0, 2.0)
 
 func save_settings() -> void:
 	var config := ConfigFile.new()
@@ -744,6 +762,7 @@ func save_settings() -> void:
 	config.set_value("audio", "volume", volume)
 	config.set_value("audio", "effects", effects_volume)
 	config.set_value("audio", "music", music_volume)
+	config.set_value("video", "arena_zoom", arena_zoom)
 	config.save("user://settings.cfg")
 
 func _exit_tree() -> void:

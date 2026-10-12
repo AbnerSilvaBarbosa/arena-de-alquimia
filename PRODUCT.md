@@ -17,6 +17,8 @@ Arena maior que a tela. Manipulação de terreno e objetos é o diferencial. Edw
 Pixel art vista de cima, pátio de Amestris, casaco vermelho, armadura cinza, alquimia azul. Conceitos visuais aprovados na conversa. Interface em português.
 
 ## Open Decisions
+
+Em 12/10/2026, o usuário confirmou personagens maiores na tela e arte futura em 128 × 128. Escala da arena padrão 150%, ajustável de 100% a 200%; viewport e dimensões do mapa mantidos. Pixelorama é a recomendação pesquisada para desenhar sprites e tilesets localmente. Os assets existentes seguem disponíveis; a nova arte 128 × 128 ainda será desenhada.
 Áudio final, refinamento de animação, capacidade medida de salas e endereço de produção. O usuário definiu PixelLab como ferramenta para sprites, animações, efeitos e imagens da UI. O conjunto inicial é exportado localmente; o áudio sintetizado é provisório. Idle em oito direções, ações em quatro e poses compartilhadas no MVP.
 
 ## Registro de direção

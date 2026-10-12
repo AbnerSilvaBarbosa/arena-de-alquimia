@@ -9,6 +9,7 @@ var local_id := 1
 var camera := Vector2(1024, 768)
 var time := 0.0
 var preview := true
+var zoom_factor := 1.5
 var input_move := Vector2.ZERO
 var input_guard := false
 var blocker := ArenaRoom.new()
@@ -36,11 +37,22 @@ func receive(data: Dictionary) -> void:
 		if not data.fighters.has(id):
 			shown.erase(id)
 
+func view_zoom() -> float:
+	return 1.0 if preview else clampf(zoom_factor, 1.0, 2.0)
+
 func screen_to_world(point: Vector2) -> Vector2:
-	return point + camera - get_viewport_rect().size / 2
+	return (point - get_viewport_rect().size / 2) / view_zoom() + camera
 
 func world_to_screen(point: Vector2) -> Vector2:
+	return (point - camera) * view_zoom() + get_viewport_rect().size / 2
+
+func _world_to_canvas(point: Vector2) -> Vector2:
 	return (point - camera + get_viewport_rect().size / 2).round()
+
+func update_view_transform() -> void:
+	var zoom := view_zoom()
+	scale = Vector2.ONE * zoom
+	position = get_viewport_rect().size / 2 * (1.0 - zoom)
 
 func _process(delta: float) -> void:
 	time += delta
@@ -78,9 +90,16 @@ func _process(delta: float) -> void:
 			elif id != local_id:
 				shown[id] = shown.get(id, f.pos).lerp(f.pos, minf(1, delta * 18))
 		if shown.has(local_id):
-			camera = camera.lerp(shown[local_id], minf(1, delta * 12))
-		var half := get_viewport_rect().size / 2
+			var target: Vector2 = shown[local_id]
+			# Bias toward the rival, keeping both opening fighters visible at close zoom.
+			for id in shown:
+				if id != local_id:
+					target += (shown[id] - shown[local_id]).limit_length(360) * 0.5
+					break
+			camera = camera.lerp(target, minf(1, delta * 12))
+		var half := get_viewport_rect().size / (2 * view_zoom())
 		camera = camera.clamp(half, ArenaRoom.SIZE - half)
+	update_view_transform()
 	queue_redraw()
 
 func _draw() -> void:
@@ -91,7 +110,7 @@ func _draw() -> void:
 	var count := (viewport / 32).ceil() + Vector2(2, 2)
 	for y in range(int(first.y), int(first.y + count.y)):
 		for x in range(int(first.x), int(first.x + count.x)):
-			var p := world_to_screen(Vector2(x * 32, y * 32))
+			var p := _world_to_canvas(Vector2(x * 32, y * 32))
 			var n := posmod(x * 73 + y * 137 + x * y * 11, 17)
 			var shade := Color("8b8170").lightened(n / 170.0)
 			if x < 2 or y < 2 or x >= 62 or y >= 46:
@@ -109,7 +128,7 @@ func _draw() -> void:
 			if n == 9:
 				draw_rect(Rect2(p + Vector2(24, 23), Vector2(3, 2)), shade.darkened(0.25))
 	# Alchemical pattern in the central courtyard.
-	var center := world_to_screen(Vector2(1024, 768))
+	var center := _world_to_canvas(Vector2(1024, 768))
 	draw_arc(center, 210, 0, TAU, 64, Color(0.25, 0.26, 0.25, 0.22), 2)
 	draw_arc(center, 202, 0, TAU, 64, Color(0.25, 0.26, 0.25, 0.22), 1)
 	for i in 6:
@@ -151,11 +170,11 @@ func _draw() -> void:
 			draw_effect(effect)
 	if snapshot.get("fighters", {}).has(local_id):
 		var f: Dictionary = snapshot.fighters[local_id]
-		var p := world_to_screen(shown.get(local_id, f.pos))
+		var p := _world_to_canvas(shown.get(local_id, f.pos))
 		var aim: Vector2 = f.aim
 		for i in range(3, 9):
 			draw_rect(Rect2((p + aim * i * 9).round(), Vector2(2, 2)), Color(0.6, 1, 0.95, 0.35))
-		var cursor := get_global_mouse_position().round()
+		var cursor := to_local(get_global_mouse_position()).round()
 		draw_arc(cursor, 7, 0, TAU, 16, CYAN, 1)
 		draw_line(cursor - Vector2(11, 0), cursor - Vector2(5, 0), CYAN, 1)
 		draw_line(cursor + Vector2(5, 0), cursor + Vector2(11, 0), CYAN, 1)
@@ -163,10 +182,12 @@ func _draw() -> void:
 		for id in snapshot.fighters:
 			if id == local_id:
 				continue
-			var enemy := world_to_screen(shown.get(id, snapshot.fighters[id].pos))
-			if not Rect2(Vector2(24, 80), viewport - Vector2(48, 160)).has_point(enemy):
+			var enemy := _world_to_canvas(shown.get(id, snapshot.fighters[id].pos))
+			var visible_start := viewport / 2 - viewport / (2 * view_zoom())
+			var safe := Rect2(visible_start + Vector2(24, 80) / view_zoom(), (viewport - Vector2(48, 160)) / view_zoom())
+			if not safe.has_point(enemy):
 				var direction := (enemy - viewport / 2).normalized()
-				var tip := enemy.clamp(Vector2(26, 94), viewport - Vector2(26, 90))
+				var tip := enemy.clamp(safe.position + Vector2(2, 14) / view_zoom(), safe.end - Vector2(2, 10) / view_zoom())
 				draw_colored_polygon(PackedVector2Array([tip + direction * 9, tip - direction * 7 + direction.orthogonal() * 6, tip - direction * 7 - direction.orthogonal() * 6]), Color("e9b56d"))
 				draw_string(font, tip + Vector2(-25, 22), "RIVAL", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("f0dbc0"))
 
@@ -176,7 +197,7 @@ func pixel_rect(pos: Vector2, size: Vector2, color: Color, outline: bool = true)
 	draw_rect(Rect2(pos, size), color)
 
 func draw_column(rect: Rect2) -> void:
-	var p := world_to_screen(rect.position)
+	var p := _world_to_canvas(rect.position)
 	draw_rect(Rect2(p + Vector2(8, 10), rect.size), Color(0.1, 0.13, 0.16, 0.3))
 	var column_art := pixel_environment.texture("column")
 	if column_art != null:
@@ -193,7 +214,7 @@ func draw_column(rect: Rect2) -> void:
 
 func draw_wall(wall: Dictionary) -> void:
 	var rect: Rect2 = wall.rect
-	var p := world_to_screen(rect.position)
+	var p := _world_to_canvas(rect.position)
 	draw_rect(Rect2(p + Vector2(5, 8), rect.size), Color(0.1, 0.15, 0.18, 0.3))
 	var wall_art := pixel_environment.texture("wall")
 	if wall_art != null:
@@ -215,7 +236,7 @@ func draw_wall(wall: Dictionary) -> void:
 		draw_rect(Rect2(p + Vector2(0, -15), Vector2(rect.size.x * wall.hp / 35, 2)), CYAN)
 
 func draw_box(world: Vector2, flying: bool) -> void:
-	var p := world_to_screen(world) - Vector2(14, 22)
+	var p := _world_to_canvas(world) - Vector2(14, 22)
 	draw_rect(Rect2(p + Vector2(4, 18), Vector2(29, 15)), Color(0.1, 0.12, 0.14, 0.27))
 	var crate_art := pixel_environment.texture("crate")
 	if crate_art != null:
@@ -232,7 +253,7 @@ func draw_box(world: Vector2, flying: bool) -> void:
 		draw_line(p + Vector2(-12, 10), p + Vector2(-4, 10), Color("e9d3ad"), 2)
 
 func draw_fighter(f: Dictionary, id: int) -> void:
-	var p := world_to_screen(f.pos)
+	var p := _world_to_canvas(f.pos)
 	var moving: bool = f.state in ["walk", "dash", "charge"]
 	var step := int(sin(time * (22 if moving else 3)) * (3 if moving else 0.7))
 	var facing: float = -1.0 if f.aim.x < 0 else 1.0
@@ -308,7 +329,7 @@ func draw_fighter(f: Dictionary, id: int) -> void:
 		var label_top := -96 if f.carrying != -1 else -84
 		if id != local_id and snapshot.get("fighters", {}).has(local_id):
 			var own: Dictionary = snapshot.fighters[local_id]
-			var own_pos := world_to_screen(shown.get(local_id, own.pos))
+			var own_pos := _world_to_canvas(shown.get(local_id, own.pos))
 			var own_top := -96 if own.carrying != -1 else -84
 			if absf(p.x - own_pos.x) < 108 and absf(p.y + label_top - own_pos.y - own_top) < 20:
 				label_top = int(own_pos.y + own_top - p.y - 22)
@@ -317,7 +338,7 @@ func draw_fighter(f: Dictionary, id: int) -> void:
 	draw_set_transform(Vector2.ZERO)
 
 func draw_effect(effect: Dictionary, depth: String = "front") -> void:
-	var p := world_to_screen(effect.pos)
+	var p := _world_to_canvas(effect.pos)
 	var local_life: float = maxf(0, effect.life - minf(time - last_snapshot, 0.15))
 	var alpha: float = clampf(local_life / effect.total, 0, 1)
 	var aim: Vector2 = effect.aim

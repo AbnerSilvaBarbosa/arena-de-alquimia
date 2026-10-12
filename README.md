@@ -1,10 +1,10 @@
-# Arena de Alquimia — protótipo 0.1
+# Arena de Alquimia — protótipo 0.1.1
 
 Duelo 1 × 1 em tempo real: **mire, esquive, transforme o chão e use objetos para mudar a luta**. Edward e Alphonse se enfrentam em uma arena maior que a tela, com salas privadas, Ready e melhor de três.
 
 ![Captura real do MVP: parede e espinhos de Edward, impacto em área de Alphonse](docs/media/gameplay.png)
 
-[Baixar o MVP para Windows e o servidor Linux](https://github.com/AbnerSilvaBarbosa/arena-de-alquimia/releases/tag/v0.1.0) · [Plano do MVP](MVP.md) · [Instalação pelo Hermes](server/HERMES.md)
+[Baixar o MVP para Windows e o servidor Linux](https://github.com/AbnerSilvaBarbosa/arena-de-alquimia/releases/tag/v0.1.1) · [Plano do MVP](MVP.md) · [Instalação pelo Hermes](server/HERMES.md)
 
 ## O jogo em movimento
 
@@ -53,6 +53,10 @@ Exploração visual de um pátio militar, uma região nevada e uma floresta. Roy
 
 ## Sobre a implementação
 
+**Escala atual:** arena em 150% por padrão, ajustável entre 100% e 200% em **Opções → Escala da arena**. Personagens, cenário e efeitos crescem juntos; a UI mantém seu tamanho. Os PNGs atuais continuam em 64 × 64 por frame. A próxima arte local será desenhada em 128 × 128, com mais detalhe real; o mapa atual mede 2048 × 1536 unidades.
+
+Pesquisa e fluxo de desenho local: [Pixelorama, alternativas e plano de arte](docs/ART_LOCAL.md). A recomendação inicial é Pixelorama para personagens, animações e tilesets, com montagem futura do cenário em TileMapLayer no Godot.
+
 Projeto Godot jogável, desenvolvido no Mac para cliente Windows e servidor Linux. Sprites, animações, efeitos visuais e elementos de interface foram produzidos no **PixelLab** e exportados para arquivos locais. A arte é uma primeira versão do MVP; música e efeitos sonoros são originais, sintetizados por código. O jogo não chama a API do PixelLab nem precisa de chave para funcionar. Os títulos usam Silkscreen; a licença acompanha os pacotes.
 
 ## Jogar neste Mac
@@ -71,7 +75,7 @@ O botão de servidor local destina-se a testes. O fluxo final usa a VPS, sem o j
 
 ## Windows
 
-Build gerada em `builds/windows/Arena.exe`; pacote de distribuição `builds/Arena-Windows-0.1.zip`. Extrair o pacote e abrir `Arena.exe`. Não precisa instalar o Godot.
+Build gerada em `builds/windows/Arena.exe`; pacote de distribuição `builds/Arena-Windows-0.1.1.zip`. Extrair o pacote e abrir `Arena.exe`. Não precisa instalar o Godot.
 
 A exportação foi feita neste Mac usando o template oficial 4.7.2. A execução nativa em Windows ainda precisa ser validada num computador Windows.
 
@@ -95,7 +99,7 @@ O primeiro jogador a ganhar dois rounds vence. Cada round dura 90 segundos; no t
 
 ## Servidor Linux / VPS
 
-Build: `builds/linux/arena-server`. Pacote: `builds/Arena-Server-Linux-0.1.zip`. O processo deve executar com `--headless`; o preset dedicado já seleciona o modo servidor. Porta padrão 7000/UDP, alterável com `-- --port=7001`.
+Build: `builds/linux/arena-server`. Pacote: `builds/Arena-Server-Linux-0.1.1.zip`. O processo deve executar com `--headless`; o preset dedicado já seleciona o modo servidor. Porta padrão 7000/UDP, alterável com `-- --port=7001`.
 
 Exemplo em Linux:
 

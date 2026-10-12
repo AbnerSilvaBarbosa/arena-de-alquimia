@@ -10,9 +10,11 @@ func _initialize() -> void:
 func capture() -> void:
 	var mode := "effects"
 	var output := ""
+	var zoom := 1.5
 	for argument in OS.get_cmdline_user_args():
 		if argument.begins_with("--mode="): mode = argument.trim_prefix("--mode=")
 		if argument.begins_with("--out="): output = argument.trim_prefix("--out=")
+		if argument.begins_with("--zoom="): zoom = float(argument.trim_prefix("--zoom="))
 	if output.is_empty():
 		push_error("Pass --out=/absolute/path.png")
 		quit(1)
@@ -47,6 +49,8 @@ func capture() -> void:
 	main.on_state(room.snapshot())
 	main.arena.set_process(false)
 	main.arena.camera = Vector2(1024, 768)
+	main.arena.zoom_factor = zoom
+	main.arena.update_view_transform()
 	main.arena.shown = {1: room.fighters[1].pos, -1: room.fighters[-1].pos}
 	for id in room.fighters:
 		var state: String = "ko" if room.fighters[id].hp <= 0 else room.fighters[id].state

@@ -2,7 +2,7 @@
 
 Contexto: VPS Hostinger KVM 2, Ubuntu 24.04, 2 vCPU, 8 GB de RAM, Campinas. Já roda Hermes, Obsidian e alguns fronts. Instalar este jogo como serviço separado, preservando tudo o que já existe.
 
-Receber e extrair `Arena-Server-Linux-0.1.zip`. O pacote contém `arena-server`, `arena.service` e estas instruções. O executável já inclui os dados do jogo; não é necessário instalar Godot, compilar o código ou acessar GitHub.
+Receber e extrair `Arena-Server-Linux-0.1.1.zip`. O pacote contém `arena-server`, `arena.service` e estas instruções. O executável já inclui os dados do jogo; não é necessário instalar Godot, compilar o código ou acessar GitHub.
 
 ## Checagens antes de instalar
 
@@ -65,4 +65,4 @@ Atualizações reiniciam o servidor e encerram salas em memória. Guardar a buil
 
 ## GitHub
 
-GitHub é opcional para histórico do código e futuras automações. O servidor do MVP funciona diretamente com este pacote. O código-fonte está em `Arena-Source-0.1.zip`, junto de testes e presets de exportação; não precisa copiá-lo para a VPS para executar a build pronta.
+GitHub é opcional para histórico do código e futuras automações. O servidor do MVP funciona diretamente com este pacote. O código-fonte está em `Arena-Source-0.1.1.zip`, junto de testes e presets de exportação; não precisa copiá-lo para a VPS para executar a build pronta.

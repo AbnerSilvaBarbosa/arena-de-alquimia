@@ -128,7 +128,7 @@ Painéis têm margens laterais 24 e verticais 22; botões, laterais 18 e vertica
 | Conexão | (130,36), 700 × 468 | Apelido/código, endereço/porta, criar/entrar em pares; estado e navegação abaixo. |
 | Treino | (230,102), 500 × 336 | Resumo, escolhas em dupla, Voltar. |
 | Lobby | (120,20), 720 × 500 | Código copiável, duas colunas com retratos, personagem e Ready. |
-| Opções | (230,52), 500 × 436 | Três sliders, Tela cheia e Voltar. |
+| Opções | (230,28), 500 × 484 | Quatro sliders (áudio e escala da arena), Tela cheia e Voltar. |
 | Overlay | (260,126), 440 × 288 | Título, informação e ações empilhadas. |
 
 HUD: painéis 262 × 76 em (18,14) e (680,14), retratos de 42; relógio 230 × 76 em (365,14). Instruções 620 × 28 em (175,434); habilidades **748 × 56 em (90,470)** com ícones; Menu em (866,488). Banner 760 × 110 em (100,150).
@@ -192,3 +192,7 @@ Sete VFX: alquimia, impacto em área, arco do golpe, rastro da esquiva, espinhos
 - **Don't** afirmar oito direções únicas para ações, geração ao vivo ou teste nativo Windows sem evidência.
 - **Don't** inventar aprovação de concept seed/comps ou ampliar a disposição de ship dos três itens revisados.
 - **Don't** substituir molduras opacas por cartões translúcidos, UI web ou decoração que encubra combate.
+
+## Escala da arena — 12/10/2026
+
+Zoom padrão 1,5×, ajustável de 1× a 2× em passos de 0,25. O Node2D da arena aplica escala e origem no centro do viewport; HUD e menus ficam na CanvasLayer sem zoom. A câmera busca um ponto entre o jogador e o rival próximo; a mira converte coordenadas usando o inverso da escala. O preview de fundo dos menus mantém 1×. A janela e o viewport continuam 1280 × 720 e 960 × 540. Sprites atuais 64 × 64; arte futura local 128 × 128 planejada em docs/ART_LOCAL.md.
