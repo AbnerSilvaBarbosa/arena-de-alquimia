@@ -1,5 +1,58 @@
 # Arena de Alquimia — protótipo 0.1
 
+Duelo 1 × 1 em tempo real: **mire, esquive, transforme o chão e use objetos para mudar a luta**. Edward e Alphonse se enfrentam em uma arena maior que a tela, com salas privadas, Ready e melhor de três.
+
+![Captura real do MVP: parede e espinhos de Edward, impacto em área de Alphonse](docs/media/gameplay.png)
+
+[Baixar o MVP para Windows e o servidor Linux](https://github.com/AbnerSilvaBarbosa/arena-de-alquimia/releases/tag/v0.1.0) · [Plano do MVP](MVP.md) · [Instalação pelo Hermes](server/HERMES.md)
+
+## O jogo em movimento
+
+![Demonstração animada do combate no Godot](docs/media/combat.gif)
+
+[Assistir ou baixar o vídeo de combate em MP4](docs/media/combat.mp4)
+
+Sequência automatizada de 13 segundos, gravada no renderer do Godot com a simulação e os assets reais: terreno, golpes, defesa, agarrão, investida, esquiva e transporte/arremesso de caixa. Há cortes entre três situações preparadas; não é uma partida humana pela internet. O vídeo é exportado a 30 FPS, independentemente da taxa de renderização durante uma partida.
+
+## Pixel arts e animações
+
+![Edward e Alphonse: prévia dos sprites e dos sete efeitos do PixelLab](docs/media/assets.gif)
+
+[Vídeo dos assets em MP4](docs/media/assets.mp4) · [Galeria estática ampliada](docs/media/pixel-art.png) · [Detalhes e origem dos assets](assets/pixellab/README.md)
+
+Os dois personagens têm **13 estados visuais**: idle, caminhada, ataque, conjuração, defesa, agarrão, pegar, carregar, caminhar carregando, arremessar, esquiva, reação a dano e KO. A galeria desacelera as ações para inspecionar os desenhos; o ritmo do combate é o do vídeo acima. Alguns estados reutilizam poses e frames. Idle tem oito direções e as ações têm quatro; Q/E compartilham a pose corporal, com efeitos distintos.
+
+## Telas do MVP
+
+| Menu inicial | Sala e seleção |
+| --- | --- |
+| ![Menu inicial com imagens da UI do PixelLab](docs/media/menu.png) | ![Sala privada, retratos, escolha de personagem e Ready](docs/media/lobby.png) |
+
+<details>
+<summary>Ver transporte de objetos</summary>
+
+![Edward carregando uma caixa enquanto Alphonse defende](docs/media/objects.png)
+
+</details>
+
+## Para onde queremos levar o visual
+
+Estas são **as duas imagens-conceito originais da conversa**, geradas antes do desenvolvimento. São referência para cenário, efeitos e composição da versão futura; as capturas e os vídeos acima mostram o que está implementado hoje.
+
+### Pátio de Amestris
+
+![Conceito futuro: Edward e Alphonse em um pátio militar detalhado](docs/media/concept-courtyard.png)
+
+A direção é enriquecer o cenário com arquitetura, bandeiras, materiais e efeitos de transmutação, mantendo a leitura dos personagens e das áreas de ataque. A lança e outros elementos desta ilustração não fazem parte do kit atual.
+
+### Outros mapas, personagens e universos
+
+![Conceito futuro de batalhas em pátio, região nevada e floresta](docs/media/concept-worlds.png)
+
+Exploração visual de um pátio militar, uma região nevada e uma floresta. Roy, Isaac e um possível encontro com Hunter × Hunter aparecem como ideias para expansão; **o MVP atual inclui somente Edward, Alphonse e um mapa**. Estes conceitos não são screenshots jogáveis nem uma promessa de conteúdo pronto.
+
+## Sobre a implementação
+
 Projeto Godot jogável, desenvolvido no Mac para cliente Windows e servidor Linux. Sprites, animações, efeitos visuais e elementos de interface foram produzidos no **PixelLab** e exportados para arquivos locais. A arte é uma primeira versão do MVP; música e efeitos sonoros são originais, sintetizados por código. O jogo não chama a API do PixelLab nem precisa de chave para funcionar. Os títulos usam Silkscreen; a licença acompanha os pacotes.
 
 ## Jogar neste Mac

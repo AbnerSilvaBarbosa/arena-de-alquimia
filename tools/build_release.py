@@ -27,7 +27,9 @@ def main():
         for preset in ['Windows', 'Linux Server']:
             subprocess.run([args.godot, '--headless', '--path', str(ROOT), '--export-release', preset], check=True)
     font_license = [(ROOT / 'assets/fonts/OFL.txt', 'licenses/OFL-Silkscreen.txt')]
-    package(BUILD / 'Arena-Windows-0.1.zip', [(BUILD / 'windows/Arena.exe', 'Arena.exe'), (ROOT / 'README.md', 'README.md')] + font_license)
+    media = [(path, str(path.relative_to(ROOT))) for path in (ROOT / 'docs/media').glob('*')
+             if path.is_file() and path.suffix in {'.png', '.gif', '.mp4', '.md', '.json'}]
+    package(BUILD / 'Arena-Windows-0.1.zip', [(BUILD / 'windows/Arena.exe', 'Arena.exe'), (ROOT / 'README.md', 'README.md')] + font_license + media)
     package(BUILD / 'Arena-Server-Linux-0.1.zip', [(BUILD / 'linux/arena-server', 'arena-server')] +
             [(ROOT / 'server' / name, name) for name in ['arena.service', 'README.md', 'HERMES.md']] + font_license)
     sources = []
@@ -37,8 +39,8 @@ def main():
     design_record = ROOT / '.impeccable/design.json'
     if design_record.exists():
         sources.append((design_record, '.impeccable/design.json'))
-    allowed = {'.gd', '.uid', '.png', '.json', '.md', '.py', '.service', '.wav', '.tres', '.ttf', '.txt'}
-    for folder in ['scripts', 'assets', 'server', 'tests', 'tools']:
+    allowed = {'.gd', '.uid', '.png', '.json', '.md', '.py', '.service', '.wav', '.tres', '.ttf', '.txt', '.gif', '.mp4'}
+    for folder in ['scripts', 'assets', 'server', 'tests', 'tools', 'docs']:
         for path in (ROOT / folder).rglob('*'):
             if path.is_file() and path.suffix in allowed and '__pycache__' not in path.parts:
                 sources.append((path, str(path.relative_to(ROOT))))
