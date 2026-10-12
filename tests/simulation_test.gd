@@ -91,10 +91,10 @@ func _initialize() -> void:
 	r.fighters[20].pos = Vector2(1100, 768)
 	r.set_input(20, Vector2.ZERO, Vector2.LEFT, false)
 	r.action(20, "q")
-	check(r.fighters[10].hp == 100, "Investida não causa dano antes do contato")
-	for i in 20:
+	check(r.fighters[20].weapon == "" and r.fighters[20].forge_left > 0, "Forja tem preparação antes da arma")
+	for i in 30:
 		r.tick(1.0 / 60)
-	check(r.fighters[10].hp == 83 and r.fighters[20].get("charge_hit", false), "Investida acerta durante o movimento uma única vez")
+	check(r.fighters[20].weapon in ["spear", "hammer", "sword"], "Servidor sorteia uma das três armas")
 	r = new_match()
 	r.fighters[20].hp = 0
 	r.tick(0.02)
@@ -151,7 +151,7 @@ func _initialize() -> void:
 	r.fighters[10].pos = Vector2(950, 768)
 	r.action(10, "q")
 	r.tick(7.1)
-	check(r.walls.is_empty(), "Parede temporária desaparece ao terminar duração")
+	check(r.walls.size() == 1, "Parede permanece no mapa após sete segundos")
 	r = new_match()
 	r.members[20].character = "Edward"
 	r.reset_round()

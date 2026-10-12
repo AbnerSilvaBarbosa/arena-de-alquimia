@@ -1,10 +1,18 @@
-# Arena de Alquimia — protótipo 0.1.1
+# Arena de Alquimia — protótipo 0.2.0
 
 Duelo 1 × 1 em tempo real: **mire, esquive, transforme o chão e use objetos para mudar a luta**. Edward e Alphonse se enfrentam em uma arena maior que a tela, com salas privadas, Ready e melhor de três.
 
-![Captura real do MVP: parede e espinhos de Edward, impacto em área de Alphonse](docs/media/gameplay.png)
+![Parede permanente com espinhos e Alphonse com martelo — captura real do Godot](docs/media/alchemy-wall.png)
 
-[Baixar o MVP para Windows e o servidor Linux](https://github.com/AbnerSilvaBarbosa/arena-de-alquimia/releases/tag/v0.1.1) · [Plano do MVP](MVP.md) · [Instalação pelo Hermes](server/HERMES.md)
+![Novas habilidades — demonstração preparada no Godot](docs/media/alchemy.gif)
+
+[Vídeo das habilidades em MP4](docs/media/alchemy.mp4) — 15 segundos, três situações preparadas para mostrar parede, martelo, espada, arremesso e recuperação da lança.
+
+[Novas habilidades e controles](docs/ALCHEMY_COMBAT.md) · [Avaliação dos packs locais](docs/ASSET_PACK_REVIEW.md)
+
+Q do Edward abre uma prévia; clique confirma a parede. E sobre a parede combina espinhos. Q do Alphonse forja uma arma; E usa seu especial, e F recupera a lança no chão. As armas ainda têm arte provisória; poses e efeitos reutilizam os assets PixelLab existentes.
+
+[Baixar o MVP para Windows e o servidor Linux](https://github.com/AbnerSilvaBarbosa/arena-de-alquimia/releases/tag/v0.2.0) · [Plano do MVP](MVP.md) · [Instalação pelo Hermes](server/HERMES.md)
 
 ## O jogo em movimento
 
@@ -12,7 +20,7 @@ Duelo 1 × 1 em tempo real: **mire, esquive, transforme o chão e use objetos pa
 
 [Assistir ou baixar o vídeo de combate em MP4](docs/media/combat.mp4)
 
-Sequência automatizada de 13 segundos, gravada no renderer do Godot com a simulação e os assets reais: terreno, golpes, defesa, agarrão, investida, esquiva e transporte/arremesso de caixa. Há cortes entre três situações preparadas; não é uma partida humana pela internet. O vídeo é exportado a 30 FPS, independentemente da taxa de renderização durante uma partida.
+Sequência automatizada de 13 segundos, gravada no renderer do Godot com a simulação e os assets reais: terreno, golpes, defesa, agarrão, forja, esquiva e transporte/arremesso de caixa. Há cortes entre três situações preparadas; não é uma partida humana pela internet. O vídeo é exportado a 30 FPS, independentemente da taxa de renderização durante uma partida.
 
 ## Pixel arts e animações
 
@@ -85,7 +93,7 @@ O botão de servidor local destina-se a testes. O fluxo final usa a VPS, sem o j
 
 ## Windows
 
-Build gerada em `builds/windows/Arena.exe`; pacote de distribuição `builds/Arena-Windows-0.1.1.zip`. Extrair o pacote e abrir `Arena.exe`. Não precisa instalar o Godot.
+Build gerada em `builds/windows/Arena.exe`; pacote de distribuição `builds/Arena-Windows-0.2.0.zip`. Extrair o pacote e abrir `Arena.exe`. Não precisa instalar o Godot.
 
 A exportação foi feita neste Mac usando o template oficial 4.7.2. A execução nativa em Windows ainda precisa ser validada num computador Windows.
 
@@ -103,13 +111,13 @@ A exportação foi feita neste Mac usando o template oficial 4.7.2. A execução
 | Pegar/arremessar uma caixa próxima | F |
 | Menu | Esc |
 
-Edward: automail, parede temporária destrutível, espinhos em linha com aviso. Alphonse: soco, investida, impacto em área com aviso. Defesa reduz dano frontal; agarrão ignora defesa; esquiva gasta resistência. Caixas podem ser carregadas e arremessadas, quebrando no impacto. Não se pode lutar enquanto carrega uma caixa.
+Edward: parede posicionável, permanente e destrutível, combinável com espinhos. Alphonse: forja aleatória de lança arremessável, martelo pesado ou espada. As três armas têm alcance, dano e recarga diferentes. Defesa reduz dano frontal; agarrão ignora defesa; esquiva gasta resistência. Caixas podem ser carregadas e arremessadas, quebrando no impacto. Não se pode lutar enquanto carrega uma caixa.
 
 O primeiro jogador a ganhar dois rounds vence. Cada round dura 90 segundos; no tempo limite vence quem tiver mais vida. Empate repete o round sem ponto. O cenário reinicia entre rounds. A revanche depende dos dois; sair durante o combate interrompe a disputa e devolve o rival ao lobby.
 
 ## Servidor Linux / VPS
 
-Build: `builds/linux/arena-server`. Pacote: `builds/Arena-Server-Linux-0.1.1.zip`. O processo deve executar com `--headless`; o preset dedicado já seleciona o modo servidor. Porta padrão 7000/UDP, alterável com `-- --port=7001`.
+Build: `builds/linux/arena-server`. Pacote: `builds/Arena-Server-Linux-0.2.0.zip`. O processo deve executar com `--headless`; o preset dedicado já seleciona o modo servidor. Porta padrão 7000/UDP, alterável com `-- --port=7001`.
 
 Exemplo em Linux:
 

@@ -5,7 +5,7 @@ signal lobby_changed(data: Dictionary)
 signal state_received(data: Dictionary)
 signal problem(message: String)
 signal connection_changed(message: String)
-const PROTOCOL := 1
+const PROTOCOL := 2
 const PORT := 7000
 const MAX_ROOMS := 4
 var dedicated := false
@@ -261,20 +261,20 @@ func request_input(move: Vector2, aim: Vector2, guard: bool) -> void:
 	if room != null:
 		room.set_input(id, move, aim, guard)
 
-func send_action(key: String) -> void:
+func send_action(key: String, target: Vector2 = Vector2.ZERO) -> void:
 	if training:
-		rooms[current_code].action(1, key)
+		rooms[current_code].action(1, key, target)
 	elif not current_code.is_empty():
-		request_action.rpc_id(1, key)
+		request_action.rpc_id(1, key, target)
 
 @rpc("any_peer", "call_remote", "reliable", 2)
-func request_action(key: String) -> void:
+func request_action(key: String, target: Vector2 = Vector2.ZERO) -> void:
 	var id := multiplayer.get_remote_sender_id()
 	if not valid_request(id, 0.035, "action"):
 		return
 	var room := room_for(id)
 	if room != null:
-		room.action(id, key)
+		room.action(id, key, target)
 
 func ask_rematch() -> void:
 	if training:

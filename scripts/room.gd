@@ -21,6 +21,11 @@ var bot_id := 0
 var bot_clock := 0.0
 var action_clock := 0.0
 var next_object := 0
+var spears: Array = []
+var weapon_rng := RandomNumberGenerator.new()
+
+func _init() -> void:
+	weapon_rng.randomize()
 
 func add_player(id: int, nickname: String) -> void:
 	members[id] = {"name": nickname.substr(0, 20), "character": "Edward", "ready": false, "loaded": false, "rematch": false}
@@ -80,6 +85,7 @@ func reset_round() -> void:
 	walls.clear()
 	effects.clear()
 	boxes.clear()
+	spears.clear()
 	next_object = 0
 	for pos in [Vector2(864, 688), Vector2(1184, 848), Vector2(512, 640), Vector2(1472, 896), Vector2(1024, 448), Vector2(1024, 1088)]:
 		boxes.append({"id": next_object, "pos": pos, "vel": Vector2.ZERO, "owner": 0, "life": 0.0})
@@ -90,7 +96,7 @@ func reset_round() -> void:
 		fighters[id] = {"id": id, "name": members[id].name, "character": members[id].character,
 			"pos": Vector2(832 if side == 0 else 1216, 768), "aim": Vector2.RIGHT if side == 0 else Vector2.LEFT,
 			"hp": 100.0, "stamina": 100.0, "state": "idle", "state_time": 0.0, "invulnerable": 0.0,
-			"dash": Vector2.ZERO, "carrying": -1, "cooldowns": {"attack": 0.0, "q": 0.0, "e": 0.0, "grab": 0.0, "interact": 0.0, "dash": 0.0}}
+			"dash": Vector2.ZERO, "carrying": -1, "weapon": "", "forge_left": 0.0, "cooldowns": {"attack": 0.0, "q": 0.0, "e": 0.0, "grab": 0.0, "interact": 0.0, "dash": 0.0}}
 		inputs[id] = {"move": Vector2.ZERO, "aim": fighters[id].aim, "guard": false, "age": 0.0}
 		index += 1
 
@@ -129,7 +135,7 @@ func move_fighter(f: Dictionary, offset: Vector2) -> void:
 		if not blocked(candidate):
 			f.pos = candidate
 
-func action(id: int, key: String) -> void:
+func action(id: int, key: String, target: Vector2 = Vector2.ZERO) -> void:
 	if phase != "fight" or not fighters.has(id):
 		return
 	var f: Dictionary = fighters[id]
@@ -160,6 +166,12 @@ func action(id: int, key: String) -> void:
 			f.state = "throw"
 			f.state_time = 0.2
 		else:
+			for spear in spears:
+				if spear.owner == id and spear.vel == Vector2.ZERO and f.pos.distance_to(spear.pos) < 58 and clear_path(f.pos, spear.pos):
+					f.weapon = "spear"
+					spears.erase(spear)
+					add_effect("alchemy", f.pos, f.aim, 0.4, id)
+					return
 			var nearest = null
 			var distance := 58.0
 			for box in boxes:
@@ -177,7 +189,15 @@ func action(id: int, key: String) -> void:
 	if key == "attack":
 		f.cooldowns.attack = 0.45
 		add_effect("slash", f.pos + f.aim * 27, f.aim, 0.16, id)
-		melee(id, 68, 11 if f.character == "Edward" else 14, 45)
+		var weapon: String = f.get("weapon", "")
+		var reach := 120.0 if weapon == "spear" else (85.0 if weapon != "" else 68.0)
+		var amount := 34.0 if weapon == "hammer" else (18.0 if weapon == "sword" else (16.0 if weapon == "spear" else (11.0 if f.character == "Edward" else 14.0)))
+		f.cooldowns.attack = 0.95 if weapon == "hammer" else (0.33 if weapon == "sword" else 0.45)
+		if weapon == "hammer":
+			f.heavy_left = 0.32
+			f.state_time = 0.55
+		else:
+			melee(id, reach, amount, 45)
 	elif key == "grab":
 		f.cooldowns.grab = 1.1
 		add_effect("grab", f.pos + f.aim * 22, f.aim, 0.25, id)
@@ -189,37 +209,72 @@ func action(id: int, key: String) -> void:
 		f.stamina -= 18
 		f.cooldowns.q = 5.0
 		if f.character == "Edward":
+			if not target.is_finite():
+				f.stamina += 18
+				f.cooldowns.q = 0.5
+				f.state_time = 0
+				return
+			var center: Vector2 = target if target != Vector2.ZERO else f.pos + f.aim * 100
+			center = center.snapped(Vector2(16, 16))
 			var horizontal: bool = abs(f.aim.x) < abs(f.aim.y)
 			var dims := Vector2(160, 28) if horizontal else Vector2(28, 160)
-			var center: Vector2 = (f.pos + f.aim * 100).snapped(Vector2(16, 16))
 			var rect := Rect2(center - dims / 2, dims)
-			var valid := rect.position.x >= 64 and rect.position.y >= 64 and rect.end.x <= SIZE.x - 64 and rect.end.y <= SIZE.y - 64
-			for obstacle in obstacle_rects():
-				if rect.intersects(obstacle):
-					valid = false
-			for other in fighters.values():
-				if rect.grow(18).has_point(other.pos):
-					valid = false
-			if valid and walls.filter(func(w): return w.owner == id).size() < 2:
-				walls.append({"rect": rect, "hp": 35.0, "life": 7.0, "owner": id})
+			if center.is_finite() and center.distance_to(f.pos) <= 240 and valid_wall(rect) and walls.filter(func(w): return w.owner == id).size() < 3:
+				walls.append({"rect": rect, "hp": 80.0, "max_hp": 80.0, "rise": 0.0, "spiked": false, "contact": 0.0, "owner": id})
 				add_effect("alchemy", center, f.aim, 0.6, id)
 			else:
 				f.cooldowns.q = 0.5
 				f.stamina += 18
+				f.state_time = 0
 		else:
-			f.state = "charge"
-			f.state_time = 0.22
-			f.dash = f.aim
-			f.charge_hit = false
-			add_effect("dash", f.pos, f.dash, 0.28, id)
+			if spears.any(func(item): return item.owner == id):
+				f.stamina += 18
+				f.cooldowns.q = 0.5
+				f.state_time = 0
+				return
+			f.forge_left = 0.42
+			add_effect("alchemy", f.pos, f.aim, 0.6, id)
+
 	elif key == "e":
 		if f.stamina < 22:
 			f.state_time = 0
 			return
 		f.stamina -= 22
 		f.cooldowns.e = 4.0
-		var kind := "spikes" if f.character == "Edward" else "slam"
-		add_effect(kind, f.pos + f.aim * 110 if kind == "spikes" else f.pos, f.aim, 0.72, id, true)
+		if f.character == "Edward":
+			var point: Vector2 = target if target != Vector2.ZERO else f.pos + f.aim * 110
+			if not point.is_finite() or point.distance_to(f.pos) > 240:
+				f.stamina += 22
+				f.cooldowns.e = 0.5
+				return
+			for wall in walls:
+				if wall.owner == id and wall.rect.grow(24).has_point(point):
+					wall.spiked = true
+					wall.max_hp = 120.0
+					wall.hp = minf(120, wall.hp + 40)
+					add_effect("spikes", wall.rect.get_center(), f.aim, 0.72, id)
+					return
+			add_effect("spikes", point, f.aim, 0.72, id, true)
+		elif f.weapon == "spear":
+			f.weapon = ""
+			f.state = "throw"
+			spears.append({"owner": id, "pos": f.pos, "vel": f.aim * 700, "aim": f.aim, "life": 0.9})
+		elif f.weapon == "sword":
+			add_effect("slash", f.pos + f.aim * 40, f.aim, 0.3, id)
+			melee(id, 100, 24, 70)
+		else:
+			add_effect("slam", f.pos, f.aim, 0.85 if f.weapon == "hammer" else 0.72, id, true)
+
+func valid_wall(rect: Rect2) -> bool:
+	if rect.position.x < 64 or rect.position.y < 64 or rect.end.x > SIZE.x - 64 or rect.end.y > SIZE.y - 64:
+		return false
+	for obstacle in obstacle_rects():
+		if rect.intersects(obstacle):
+			return false
+	for other in fighters.values():
+		if rect.grow(18).has_point(other.pos):
+			return false
+	return true
 
 func add_effect(kind: String, pos: Vector2, aim: Vector2, life: float, owner: int, pending: bool = false) -> void:
 	effects.append({"kind": kind, "pos": pos, "aim": aim, "life": life, "total": life, "owner": owner, "pending": pending})
@@ -235,13 +290,22 @@ func melee(id: int, reach: float, amount: float, push: float, grab: bool = false
 			damage(other_id, amount, f.pos, push, grab)
 	if not grab:
 		for wall in walls:
-			if wall.rect.grow(reach * 0.6).has_point(f.pos + f.aim * 22):
+			if segment_hits_rect(f.pos, f.pos + f.aim * reach, wall.rect):
 				wall.hp -= amount
 		for i in range(boxes.size() - 1, -1, -1):
 			var box: Dictionary = boxes[i]
 			if box.owner == 0 and box.pos.distance_to(f.pos + f.aim * 35) < 28:
 				add_effect("dust", box.pos, Vector2.UP, 0.3, id)
 				boxes.remove_at(i)
+
+func segment_hits_rect(a: Vector2, b: Vector2, rect: Rect2) -> bool:
+	if rect.has_point(a) or rect.has_point(b):
+		return true
+	var corners := [rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y)]
+	for i in 4:
+		if Geometry2D.segment_intersects_segment(a, b, corners[i], corners[(i + 1) % 4]) != null:
+			return true
+	return false
 
 func clear_path(a: Vector2, b: Vector2) -> bool:
 	for rect in PERMANENT:
@@ -301,6 +365,14 @@ func tick(delta: float) -> void:
 		update_bot(delta)
 	for id in fighters:
 		var f: Dictionary = fighters[id]
+		if f.forge_left > 0:
+			f.forge_left = maxf(0, f.forge_left - delta)
+			if f.forge_left == 0:
+				f.weapon = ["spear", "hammer", "sword"][weapon_rng.randi_range(0, 2)]
+		if f.get("heavy_left", 0.0) > 0:
+			f.heavy_left = maxf(0, f.heavy_left - delta)
+			if f.heavy_left == 0:
+				melee(id, 85, 34, 80)
 		var input: Dictionary = inputs[id]
 		input.age += delta
 		if input.age > 0.35:
@@ -345,8 +417,14 @@ func tick(delta: float) -> void:
 				move_fighter(a, normal * (28 - diff.length()) / 2)
 				move_fighter(b, -normal * (28 - diff.length()) / 2)
 	for i in range(walls.size() - 1, -1, -1):
-		walls[i].life -= delta
-		if walls[i].life <= 0 or walls[i].hp <= 0:
+		walls[i].rise = minf(1, walls[i].get("rise", 1.0) + delta / 0.45)
+		walls[i].contact = maxf(0, walls[i].get("contact", 0.0) - delta)
+		if walls[i].get("spiked", false) and walls[i].contact == 0:
+			for id in fighters:
+				if id != walls[i].owner and walls[i].rect.grow(23).has_point(fighters[id].pos):
+					damage(id, 10, walls[i].rect.get_center(), 25)
+					walls[i].contact = 0.6
+		if walls[i].hp <= 0:
 			add_effect("dust", walls[i].rect.get_center(), Vector2.UP, 0.4, walls[i].owner)
 			walls.remove_at(i)
 	for i in range(effects.size() - 1, -1, -1):
@@ -361,7 +439,7 @@ func tick(delta: float) -> void:
 				var relative: Vector2 = f.pos - effect.pos
 				var hit: bool = relative.length() < 100 if effect.kind == "slam" else absf(relative.dot(effect.aim.orthogonal())) < 34 and absf(relative.dot(effect.aim)) < 115
 				if hit and clear_path(effect.pos, f.pos):
-					damage(id, 22, effect.pos - effect.aim * 50, 60)
+					damage(id, 42 if effect.kind == "slam" and fighters[effect.owner].weapon == "hammer" else 22, effect.pos - effect.aim * 50, 60)
 		if effect.life <= 0:
 			effects.remove_at(i)
 	for i in range(boxes.size() - 1, -1, -1):
@@ -395,6 +473,32 @@ func tick(delta: float) -> void:
 		if broken:
 			add_effect("dust", box.pos, Vector2.UP, 0.4, box.get("thrower", 0))
 			boxes.remove_at(i)
+	for spear in spears:
+		if spear.vel == Vector2.ZERO:
+			continue
+		spear.life -= delta
+		var steps := maxi(1, int(ceil(spear.vel.length() * delta / 8)))
+		for step in steps:
+			var next: Vector2 = spear.pos + spear.vel * delta / steps
+			var stop: bool = next.x < 70 or next.y < 70 or next.x > SIZE.x - 70 or next.y > SIZE.y - 70
+			for rect in PERMANENT:
+				stop = stop or rect.grow(6).has_point(next)
+			for wall in walls:
+				if wall.rect.grow(6).has_point(next):
+					wall.hp -= 24
+					stop = true
+			if stop:
+				spear.vel = Vector2.ZERO
+				break
+			spear.pos = next
+			for id in fighters:
+				if id != spear.owner and fighters[id].pos.distance_to(next) < 25:
+					damage(id, 24, next - spear.aim * 30, 45)
+					spear.vel = Vector2.ZERO
+			if spear.vel == Vector2.ZERO:
+				break
+		if spear.life <= 0:
+			spear.vel = Vector2.ZERO
 	var dead: Array = fighters.keys().filter(func(id): return fighters[id].hp <= 0)
 	if not dead.is_empty() or timer <= 0:
 		finish_round()
@@ -445,6 +549,13 @@ func update_bot(delta: float) -> void:
 	bot_clock += delta
 	var other: int = fighters.keys().filter(func(id): return id != bot_id)[0]
 	var f: Dictionary = fighters[bot_id]
+	for spear in spears:
+		if spear.owner == bot_id and spear.vel == Vector2.ZERO:
+			var retrieval: Vector2 = spear.pos - f.pos
+			set_input(bot_id, retrieval.normalized() if retrieval.length() > 40 else Vector2.ZERO, retrieval, false)
+			if retrieval.length() < 58:
+				action(bot_id, "interact")
+			return
 	var direction: Vector2 = fighters[other].pos - f.pos
 	var move := direction.normalized() if direction.length() > 50 else Vector2.ZERO
 	if blocked(f.pos + move * 30):
@@ -463,4 +574,4 @@ func lobby_data() -> Dictionary:
 	return {"code": code, "members": members.duplicate(true), "phase": phase, "message": message, "scores": scores.duplicate(), "revision": revision}
 
 func snapshot() -> Dictionary:
-	return {"code": code, "fighters": fighters.duplicate(true), "boxes": boxes.duplicate(true), "walls": walls.duplicate(true), "effects": effects.duplicate(true), "phase": phase, "timer": timer, "scores": scores.duplicate(), "round": round_number, "message": message, "revision": revision}
+	return {"code": code, "fighters": fighters.duplicate(true), "boxes": boxes.duplicate(true), "spears": spears.duplicate(true), "walls": walls.duplicate(true), "effects": effects.duplicate(true), "phase": phase, "timer": timer, "scores": scores.duplicate(), "round": round_number, "message": message, "revision": revision}

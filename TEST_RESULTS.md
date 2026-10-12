@@ -40,3 +40,14 @@ Servidor 0.1.1 empacotado: partida 2–0 e revanche aprovadas nos dois clientes,
 ## Primeiro lote Pixelorama local — 12/10/2026
 
 Edward 128 × 128 com oito camadas e atlas 256 × 256 com cinco camadas salvos em `.pxo` pela API do Pixelorama 1.2.3. Ambos reabertos na GUI; exportados pela CLI com comparação RGBA idêntica aos PNGs. Reprodução em pasta separada também preservou os pixels. Dezesseis peças individuais conferidas em 64 × 64. Prévia estática renderizada no Godot com TileMapLayer e Sprite2D; sem combate/colisões/animação nesta cena. Nenhuma alteração no renderer ou servidor do MVP. O import do projeto Godot não apresentou erros de script. Diagnósticos headless da ferramenta estão descritos em art/source/LOCAL_STUDY.md.
+
+## Alquimia 0.2.0 — 12/10/2026
+
+- Simulação: 32 verificações passaram, atualizadas para forja e paredes persistentes.
+- Novas habilidades: 61 verificações passaram, incluindo posição/alcance/coordenadas inválidas, emergência da parede, vida/combinação/contato/destruição, sorteio das três armas, preparação e dano do martelo, lança arremessada e recuperação, reset entre rounds.
+- Assets: 1083 verificações, 294 texturas, nenhuma falha. View/câmera: 29 verificações, nenhuma falha.
+- Rede real local: dois clientes ENet e servidor, RTT de 100 ms e 1% de perda; parede posicionada e arma gerada sincronizadas. Rejeição de sala cheia, código inválido e protocolo incompatível passou.
+- Servidor exportado: carregado pelo Godot do Mac como PCK, dois clientes completaram 2–0 e revanche com as mesmas condições de rede. Isso não valida a execução nativa no Linux.
+- Captura visual no renderer OpenGL do Mac: parede com HP/espinhos e Alphonse equipado; vídeo preparado de 15 segundos mostra martelo, espada e lança com arremesso/recuperação. Arte das armas ainda provisória; corpos e efeitos PixelLab reutilizados.
+- Exportações Windows e Linux geradas; execução nativa no Windows/Linux e deploy na VPS permanecem sem validação nesta máquina.
+- Protocolo 2: atualizar servidor e clientes juntos. Nenhum arquivo dos três packs terceiros foi incluído nas distribuições.

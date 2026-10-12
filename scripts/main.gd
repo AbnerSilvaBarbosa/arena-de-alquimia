@@ -545,7 +545,7 @@ func on_state(data: Dictionary) -> void:
 		previous_hp[ids[i]] = f.hp
 		health_labels[i].text = f.name
 		var rounds: int = data.scores.get(ids[i], 0)
-		health_character_labels[i].text = "%s  ·  %d %s" % [f.character, rounds, "round" if rounds == 1 else "rounds"]
+		health_character_labels[i].text = "%s  ·  %d %s%s" % [f.character, rounds, "round" if rounds == 1 else "rounds", " · " + {"spear": "Lança", "hammer": "Martelo", "sword": "Espada"}.get(f.get("weapon", ""), "") if f.get("weapon", "") != "" else ""]
 		hp_bars[i].value = f.hp
 		stamina_bars[i].value = f.stamina
 	timer_label.text = "%02d:%02d\nROUND %d" % [int(maxf(0, data.timer)) / 60, int(maxf(0, data.timer)) % 60, data.round]
@@ -561,7 +561,7 @@ func on_state(data: Dictionary) -> void:
 			show_result()
 	if data.fighters.has(net.local_id):
 		var f: Dictionary = data.fighters[net.local_id]
-		var names: Array = ["Parede", "Espinhos"] if f.character == "Edward" else ["Investida", "Impacto"]
+		var names: Array = ["Parede", "Espinhos"] if f.character == "Edward" else ["Forjar", {"spear": "Lançar lança", "hammer": "Impacto pesado", "sword": "Corte", "": "Impacto"}.get(f.get("weapon", ""), "Impacto")]
 		ability_icons[0].texture = ArenaPixelUI.region(Rect2(0 if f.character == "Edward" else 96, 96, 32, 32))
 		ability_icons[1].texture = ArenaPixelUI.region(Rect2(32 if f.character == "Edward" else 160, 96, 32, 32))
 		for i in 2:
@@ -569,7 +569,7 @@ func on_state(data: Dictionary) -> void:
 			var cooldown: float = f.cooldowns[key]
 			ability_labels[i].text = "%s  %s%s" % [key.to_upper(), names[i], " %.1fs" % cooldown if cooldown > 0 else ""]
 			ability_labels[i].modulate = Color("9a9e91") if cooldown > 0 else Color.WHITE
-		ability_labels[3].text = "F  Jogar" if f.carrying != -1 else "F  Caixa"
+		ability_labels[3].text = "F  Jogar" if f.carrying != -1 else "F  Recuperar" if data.get("spears", []).any(func(item): return item.owner == net.local_id) else "F  Caixa"
 	if data.phase != last_phase:
 		if data.phase in ["fight", "intermission", "result"]:
 			sound.play("round")
@@ -704,12 +704,29 @@ func _process(delta: float) -> void:
 		if input_clock >= 1.0 / 30:
 			input_clock = 0
 			net.send_input(move, aim, arena.input_guard)
+		if not active:
+			arena.placing_wall = false
 		if active:
+			if Input.is_action_just_pressed("q") and state.get("fighters", {}).get(net.local_id, {}).get("character", "") == "Edward":
+				arena.placing_wall = not arena.placing_wall
+			if arena.placing_wall and Input.is_action_just_pressed("guard"):
+				arena.placing_wall = false
 			for key in ["attack", "q", "e", "dash", "grab", "interact"]:
 				if Input.is_action_just_pressed(key) and (key != "attack" or get_viewport().gui_get_hovered_control() == null):
-					net.send_action(key)
+					if key == "q" and state.get("fighters", {}).get(net.local_id, {}).get("character", "") == "Edward":
+						continue
+					if key == "attack" and arena.placing_wall:
+						if not arena.placement_valid:
+							continue
+						net.send_action("q", arena.screen_to_world(arena.get_global_mouse_position()))
+						sound.play("alchemy")
+						arena.placing_wall = false
+						continue
+					net.send_action(key, arena.screen_to_world(arena.get_global_mouse_position()) if key in ["q", "e"] else Vector2.ZERO)
 					sound.play("alchemy" if key in ["q", "e"] else "attack")
-		if Input.is_action_just_pressed("menu"):
+		if Input.is_action_just_pressed("menu") and arena.placing_wall:
+			arena.placing_wall = false
+		elif Input.is_action_just_pressed("menu"):
 			if is_instance_valid(overlay) and state.get("phase", "") != "result":
 				overlay.queue_free()
 				overlay = null

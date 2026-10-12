@@ -21,7 +21,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--godot', default=os.environ.get('GODOT_BIN', 'godot'))
     parser.add_argument('--package-only', action='store_true')
-    parser.add_argument('--version', default='0.1.1')
+    parser.add_argument('--version', default='0.2.0')
     args = parser.parse_args()
     BUILD.mkdir(exist_ok=True)
     if not args.package_only:

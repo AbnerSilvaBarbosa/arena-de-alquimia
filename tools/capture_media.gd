@@ -51,7 +51,7 @@ func _process(delta: float) -> bool:
 			36: room.set_input(1, Vector2.ZERO, Vector2.RIGHT, false)
 			45: room.action(1, "q")
 			75:
-				room.action(1, "e")
+				room.action(1, "e", room.walls[0].rect.get_center())
 				room.action(-1, "e")
 			120: reset_scene(Vector2(930, 768), Vector2(990, 768))
 			130: room.action(1, "attack")

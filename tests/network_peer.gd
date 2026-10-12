@@ -13,6 +13,8 @@ var ended := false
 var invalid_version := false
 var duel := false
 var result_seen := false
+var terrain_seen := false
+var weapon_seen := false
 var blocker := ArenaRoom.new()
 
 func _initialize() -> void:
@@ -100,9 +102,14 @@ func on_state(data: Dictionary) -> void:
 			net.send_action("attack")
 	else:
 		net.send_input(Vector2(0, -1), Vector2.DOWN, false)
+	if not duel:
+		terrain_seen = terrain_seen or not data.walls.is_empty()
+		weapon_seen = weapon_seen or data.fighters.values().any(func(actor): return actor.get("weapon", "") in ["spear", "hammer", "sword"])
+		if states == 5:
+			net.send_action("q", f.pos + Vector2(160, 0) if mode == "create" else Vector2.ZERO)
 	if states == 3:
 		net.send_action("not_a_valid_action")
-	if not duel and states > 30 and moved and not ended:
+	if not duel and states > 30 and moved and terrain_seen and weapon_seen and not ended:
 		finish(data.fighters.size())
 
 func vote_rematch() -> void:

@@ -38,6 +38,12 @@ func capture() -> void:
 		room.action(1, "e")
 		room.action(-1, "e")
 		room.tick(0.53)
+	elif mode in ["wall", "hammer", "spear", "sword"]:
+		room.action(1, "q", Vector2(1010, 768))
+		room.tick(0.5)
+		room.action(1, "e", room.walls[0].rect.get_center())
+		room.fighters[-1].weapon = "hammer" if mode == "wall" else mode
+		room.tick(0.1)
 	elif mode == "carry":
 		room.boxes[0].pos = room.fighters[1].pos + Vector2(35, 0)
 		room.action(1, "interact")

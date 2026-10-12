@@ -9,6 +9,8 @@ var local_id := 1
 var camera := Vector2(1024, 768)
 var time := 0.0
 var preview := true
+var placing_wall := false
+var placement_valid := false
 var zoom_factor := 1.5
 var input_move := Vector2.ZERO
 var input_guard := false
@@ -140,10 +142,14 @@ func _draw() -> void:
 	if preview:
 		draw_box(Vector2(850, 700), false)
 		draw_box(Vector2(1180, 880), false)
-		draw_wall({"rect": Rect2(1000, 685, 28, 160), "hp": 35.0, "life": 7.0})
+		draw_wall({"rect": Rect2(1000, 685, 28, 160), "hp": 80.0, "rise": 1.0})
 		draw_fighter({"pos": Vector2(885, 800), "character": "Edward", "state": "idle", "aim": Vector2.RIGHT, "invulnerable": 0.0, "name": "", "carrying": -1}, 0)
 		draw_fighter({"pos": Vector2(1160, 740), "character": "Alphonse", "state": "idle", "aim": Vector2.LEFT, "invulnerable": 0.0, "name": "", "carrying": -1}, 0)
 		return
+	for spear in snapshot.get("spears", []):
+		draw_weapon(_world_to_canvas(spear.pos), spear.aim, "spear", 0.5)
+		if spear.vel == Vector2.ZERO:
+			draw_arc(_world_to_canvas(spear.pos), 18, 0, TAU, 16, CYAN, 1)
 	for wall in snapshot.get("walls", []):
 		draw_wall(wall)
 	for effect in snapshot.get("effects", []):
@@ -174,6 +180,18 @@ func _draw() -> void:
 		var aim: Vector2 = f.aim
 		for i in range(3, 9):
 			draw_rect(Rect2((p + aim * i * 9).round(), Vector2(2, 2)), Color(0.6, 1, 0.95, 0.35))
+		if placing_wall:
+			var placement_center: Vector2 = screen_to_world(get_global_mouse_position()).snapped(Vector2(16, 16))
+			var dims := Vector2(160, 28) if abs(f.aim.x) < abs(f.aim.y) else Vector2(28, 160)
+			var rect := Rect2(placement_center - dims / 2, dims)
+			blocker.fighters = snapshot.fighters
+			var valid: bool = placement_center.distance_to(f.pos) <= 240 and blocker.valid_wall(rect) and snapshot.walls.filter(func(w): return w.owner == local_id).size() < 3
+			valid = valid and f.stamina >= 18 and f.cooldowns.q <= 0 and f.state_time <= 0
+			placement_valid = valid
+			var color := CYAN if valid else Color("f47767")
+			draw_rect(Rect2(_world_to_canvas(rect.position), rect.size), Color(color, 0.2))
+			draw_rect(Rect2(_world_to_canvas(rect.position), rect.size), color, false, 2)
+			draw_string(font, _world_to_canvas(placement_center) + Vector2(-100, -110), "Clique: criar • direito: cancelar", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, color)
 		var cursor := to_local(get_global_mouse_position()).round()
 		draw_arc(cursor, 7, 0, TAU, 16, CYAN, 1)
 		draw_line(cursor - Vector2(11, 0), cursor - Vector2(5, 0), CYAN, 1)
@@ -215,25 +233,41 @@ func draw_column(rect: Rect2) -> void:
 func draw_wall(wall: Dictionary) -> void:
 	var rect: Rect2 = wall.rect
 	var p := _world_to_canvas(rect.position)
+	var rise: float = clampf(wall.get("rise", 1.0) + minf(time - last_snapshot, 0.15) / 0.45, 0, 1)
 	draw_rect(Rect2(p + Vector2(5, 8), rect.size), Color(0.1, 0.15, 0.18, 0.3))
 	var wall_art := pixel_environment.texture("wall")
-	if wall_art != null:
-		for y in range(0, int(rect.size.y), 16):
-			for x in range(0, int(rect.size.x), 16):
-				var width := mini(16, int(rect.size.x) - x)
-				draw_texture_rect(wall_art, Rect2(p + Vector2(x, y - 8), Vector2(width, 24)), false)
-		if wall.hp < 35:
-			draw_rect(Rect2(p + Vector2(0, -15), Vector2(rect.size.x * wall.hp / 35, 2)), CYAN)
-		return
-	pixel_rect(p, rect.size, Color("746f62"))
 	for y in range(0, int(rect.size.y), 16):
 		for x in range(0, int(rect.size.x), 16):
-			var h := posmod(x * 3 + y * 7, 8)
-			pixel_rect(p + Vector2(x + 2, y - 7 - h), Vector2(12, 18 + h), Color("b1a68c"))
-			if wall.life > 6:
-				draw_line(p + Vector2(x + 8, y), p + Vector2(x + 3, y - 10), CYAN, 2)
-	if wall.hp < 35:
-		draw_rect(Rect2(p + Vector2(0, -15), Vector2(rect.size.x * wall.hp / 35, 2)), CYAN)
+			var width := mini(16, int(rect.size.x) - x)
+			if wall_art != null:
+				draw_texture_rect(wall_art, Rect2(p + Vector2(x, y + 8 - 16 * rise), Vector2(width, 24 * rise)), false)
+			if wall.get("spiked", false) and x % 32 == 0 and y % 32 == 0:
+				var spike := pixel_fx.frame("spikes", 0.3, "part-ice_spikes")
+				if not spike.is_empty():
+					var origin := p + Vector2(x + 12, y - 4)
+					draw_texture_rect_region(spike.texture, Rect2(origin + spike.offset * 0.8, spike.size * Vector2(0.8, 0.8 * rise)), spike.region)
+
+	draw_rect(Rect2(p + Vector2(0, -28), Vector2(rect.size.x, 3)), INK)
+	draw_rect(Rect2(p + Vector2(0, -28), Vector2(rect.size.x * maxf(0, wall.hp) / wall.get("max_hp", 80.0), 3)), CYAN)
+
+func draw_weapon(origin: Vector2, aim: Vector2, weapon: String, progress: float = 1.0) -> void:
+	if weapon.is_empty():
+		return
+	var direction := aim.rotated(-0.9 + progress * 1.8)
+	var end := origin + direction * (46 if weapon == "spear" else 30)
+	draw_line(origin, end, INK, 6)
+	draw_line(origin, end, Color("bca071"), 3)
+	if weapon == "hammer":
+		var side := direction.orthogonal() * 11
+		draw_line(end - side, end + side, INK, 16)
+		draw_line(end - side, end + side, Color("88acb7"), 11)
+		draw_line(end - side, end + side, Color("d9e7e3"), 3)
+	else:
+		var tip := end + direction * (16 if weapon == "spear" else 12)
+		var base := origin + direction * (34 if weapon == "spear" else 8)
+		var width := 5 if weapon == "spear" else 4
+		draw_colored_polygon(PackedVector2Array([base + direction.orthogonal() * width, tip, base - direction.orthogonal() * width]), Color("c6dfdf"))
+		draw_line(base, tip, Color("f0f3e5"), 2)
 
 func draw_box(world: Vector2, flying: bool) -> void:
 	var p := _world_to_canvas(world) - Vector2(14, 22)
@@ -310,6 +344,13 @@ func draw_fighter(f: Dictionary, id: int) -> void:
 		draw_line(Vector2(-7, -22 + step), Vector2(8, -22 + step), steel.darkened(0.35), 2)
 		for i in 3:
 			draw_rect(Rect2(Vector2(-6, -27 + i * 6 + step), Vector2(2, 2)), Color("d1dcce"))
+	if f.character == "Alphonse" and f.carrying == -1:
+		var weapon: String = f.get("weapon", "")
+		var progress: float = clampf(clock.elapsed / (0.55 if weapon == "hammer" else 0.28), 0, 1) if f.state == "attack" else 0.5
+		draw_weapon(Vector2(10 * facing, -20), f.aim, weapon, progress)
+		if f.get("forge_left", 0.0) > 0:
+			var glow := Color(CYAN, 0.65)
+			draw_arc(Vector2(0, -15), 24 * (1 - f.forge_left / 0.6), time * 8, time * 8 + 4.5, 20, glow, 2)
 	if f.state == "guard":
 		draw_arc(Vector2(0, -17), 27, f.aim.angle() - 0.8, f.aim.angle() + 0.8, 10, CYAN, 3)
 	if f.invulnerable > 0:
