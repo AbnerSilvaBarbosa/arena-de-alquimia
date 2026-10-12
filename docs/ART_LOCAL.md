@@ -1,5 +1,7 @@
 # Arte local e escala — decisão de 12/10/2026
 
+Atualização após revisão do usuário: o primeiro estudo local foi considerado abaixo da qualidade desejada. A direção atual é usar PixelLab como ferramenta principal. Esta pesquisa e os `.pxo` ficam como registro do experimento. Personagens maiores na tela e a meta de arte futura 128 × 128 permanecem; a qualidade visual tem prioridade sobre o método de produção.
+
 Objetivo confirmado: personagens maiores na tela agora e arte futura em **128 × 128 pixels**, desenhada localmente. O mapa também receberá um tileset próprio. A primeira versão continua usando os PNGs já exportados; nenhum serviço é necessário para editá-los ou reproduzi-los.
 
 ## Ferramenta recomendada: Pixelorama

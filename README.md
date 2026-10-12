@@ -18,6 +18,8 @@ Sequência automatizada de 13 segundos, gravada no renderer do Godot com a simul
 
 ### Primeiro estudo desenhado localmente
 
+**Direção atual:** após avaliar este estudo, o usuário decidiu continuar com **PixelLab** como ferramenta principal. A arte local abaixo fica como experimento; o MVP jogável mantém os assets PixelLab. A escala maior da arena permanece.
+
 ![Estudo local: pose de Edward em 128 × 128 e tileset do pátio no Godot](docs/media/local-art-study.png)
 
 Produzido localmente com a API do Pixelorama: [Edward editável, 128 × 128](art/source/characters/edward_idle_128_study.pxo) e [atlas editável com 16 peças de 64 × 64](art/source/environment/amestris_tiles_64_study.pxo). Os `.pxo` preservam oito e cinco camadas, respectivamente. Esta é uma pose estática e uma montagem de estudo em TileMapLayer, ainda sem animações novas ou integração ao combate. [Fluxo e peças do atlas](art/source/LOCAL_STUDY.md).
@@ -63,7 +65,7 @@ Exploração visual de um pátio militar, uma região nevada e uma floresta. Roy
 
 **Escala atual:** arena em 150% por padrão, ajustável entre 100% e 200% em **Opções → Escala da arena**. Personagens, cenário e efeitos crescem juntos; a UI mantém seu tamanho. Os PNGs atuais continuam em 64 × 64 por frame. A próxima arte local será desenhada em 128 × 128, com mais detalhe real; o mapa atual mede 2048 × 1536 unidades.
 
-Pesquisa e fluxo de desenho local: [Pixelorama, alternativas e plano de arte](docs/ART_LOCAL.md). A recomendação inicial é Pixelorama para personagens, animações e tilesets, com montagem futura do cenário em TileMapLayer no Godot.
+Pesquisa do fluxo local: [Pixelorama e alternativas](docs/ART_LOCAL.md). Após a avaliação do primeiro estudo, a direção escolhida é continuar produzindo a arte principal com PixelLab, com o nível de qualidade dos conceitos originais como referência.
 
 Projeto Godot jogável, desenvolvido no Mac para cliente Windows e servidor Linux. Sprites, animações, efeitos visuais e elementos de interface foram produzidos no **PixelLab** e exportados para arquivos locais. A arte é uma primeira versão do MVP; música e efeitos sonoros são originais, sintetizados por código. O jogo não chama a API do PixelLab nem precisa de chave para funcionar. Os títulos usam Silkscreen; a licença acompanha os pacotes.
 
