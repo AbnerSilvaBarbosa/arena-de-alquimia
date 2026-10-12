@@ -11,9 +11,11 @@ func capture() -> void:
 	var mode := "effects"
 	var output := ""
 	var zoom := 1.5
+	var scenario := "garden"
 	for argument in OS.get_cmdline_user_args():
 		if argument.begins_with("--mode="): mode = argument.trim_prefix("--mode=")
 		if argument.begins_with("--out="): output = argument.trim_prefix("--out=")
+		if argument.begins_with("--scenario="): scenario = argument.trim_prefix("--scenario=")
 		if argument.begins_with("--zoom="): zoom = float(argument.trim_prefix("--zoom="))
 	if output.is_empty():
 		push_error("Pass --out=/absolute/path.png")
@@ -27,6 +29,7 @@ func capture() -> void:
 	room.timer = ArenaRoom.ROUND_TIME
 	room.bot_id = 0
 	room.reset_round()
+	room.scenario = scenario
 	room.fighters[1].pos = Vector2(900, 768)
 	room.fighters[-1].pos = Vector2(1150, 768)
 	room.set_input(1, Vector2.ZERO, Vector2.RIGHT, false)

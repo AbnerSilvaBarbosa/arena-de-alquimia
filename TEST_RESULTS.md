@@ -51,3 +51,12 @@ Edward 128 × 128 com oito camadas e atlas 256 × 256 com cinco camadas salvos e
 - Captura visual no renderer OpenGL do Mac: parede com HP/espinhos e Alphonse equipado; vídeo preparado de 15 segundos mostra martelo, espada e lança com arremesso/recuperação. Arte das armas ainda provisória; corpos e efeitos PixelLab reutilizados.
 - Exportações Windows e Linux geradas; execução nativa no Windows/Linux e deploy na VPS permanecem sem validação nesta máquina.
 - Protocolo 2: atualizar servidor e clientes juntos. Nenhum arquivo dos três packs terceiros foi incluído nas distribuições.
+
+## Cenários locais 0.3.0-dev — 12/10/2026
+
+- 68 verificações de cenário passaram: spawns livres, colisão dos 20 troncos, ausência de árvores dentro dos lagos, bloqueio de movimento grande/linha de ataque/construção de parede, lagos/cercados sólidos, alternância sincronizada, escolha do treino preservada, decoração determinística, atlas e animações locais íntegros.
+- Simulação geral: 32 verificações passaram. Alquimia: 61 verificações passaram.
+- Partida ENet com dois clientes e servidor de código-fonte: 2–0 e revanche passaram, RTT 100 ms e perda de 1%. Protocolo 3; não foi usado o servidor exportado 0.2.0.
+- Capturas reais do Godot em `.local/garden.png`, `.local/forest.png` e `.local/forest-overview.png`; arte de terceiros permanece fora do Git.
+- Combate no bosque, 18 segundos, Apple M5/OpenGL Compatibility: 1681 amostras após aquecimento, FPS mínimo/médio 120. Não é garantia de desempenho em outros computadores.
+- Nenhuma nova release/exportação foi publicada com a arte destes packs. Uso local e autorização para distribuição são tratados separadamente em `docs/SCENERY.md`.

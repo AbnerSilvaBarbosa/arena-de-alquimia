@@ -5,7 +5,7 @@ signal lobby_changed(data: Dictionary)
 signal state_received(data: Dictionary)
 signal problem(message: String)
 signal connection_changed(message: String)
-const PROTOCOL := 2
+const PROTOCOL := 3
 const PORT := 7000
 const MAX_ROOMS := 4
 var dedicated := false
@@ -79,12 +79,13 @@ func close_connection() -> void:
 	rates.clear()
 	connection_clock = 0
 
-func train(character: String) -> void:
+func train(character: String, scenario: String = "garden") -> void:
 	close_connection()
 	training = true
 	local_id = 1
 	var room := ArenaRoom.new()
 	room.code = "TREINO"
+	room.scenario_override = scenario if scenario in ["garden", "forest"] else "garden"
 	room.add_player(1, "Você")
 	room.add_player(-1, "Treino · CPU")
 	room.bot_id = -1

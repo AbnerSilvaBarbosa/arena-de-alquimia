@@ -1,4 +1,12 @@
-# Arena de Alquimia — protótipo 0.2.0
+# Arena de Alquimia — protótipo
+
+## Desenvolvimento local: cenários 0.3.0-dev
+
+Dois ambientes em 2048×1536: **Jardins de Amestris** e **Bosque das Ruínas**, com árvores, flores, pedras, ilhas com água, trilhas, guardas e quimeras animadas em cercados. Escolha o ambiente na tela de treino; no multiplayer, os cenários alternam entre rounds. Troncos, cercados e lagos bloqueiam movimento, golpes e arremessos. Copas ficam transparentes quando cobrem um jogador.
+
+Esta versão usa os packs baixados pelo usuário localmente. Os PNGs de terceiros não estão neste repositório nem no ZIP de código-fonte. [Instalação e créditos dos cenários](docs/SCENERY.md). A release disponível abaixo continua sendo 0.2.0, sem os novos cenários; o desenvolvimento local usa protocolo 3.
+
+## Release 0.2.0
 
 Duelo 1 × 1 em tempo real: **mire, esquive, transforme o chão e use objetos para mudar a luta**. Edward e Alphonse se enfrentam em uma arena maior que a tela, com salas privadas, Ready e melhor de três.
 

@@ -22,6 +22,7 @@ var animation_clocks: Dictionary = {}
 var carry_visuals: Dictionary = {}
 var pixel_fx := ArenaPixelFX.new()
 var pixel_environment := ArenaPixelEnvironment.new()
+var scenery := ArenaScenery.new()
 
 func receive(data: Dictionary) -> void:
 	var phase_changed: bool = snapshot.get("phase", "") != data.phase
@@ -106,6 +107,7 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	var viewport := get_viewport_rect().size
+	var scenario: String = snapshot.get("scenario", "garden")
 	draw_rect(Rect2(Vector2.ZERO, viewport), Color("625b50"))
 	var origin := camera - viewport / 2
 	var first := (origin / 32).floor()
@@ -117,9 +119,12 @@ func _draw() -> void:
 			var shade := Color("8b8170").lightened(n / 170.0)
 			if x < 2 or y < 2 or x >= 62 or y >= 46:
 				shade = Color("3e4244")
-			var floor_art := pixel_environment.texture("floor")
+			var grass: bool = scenery.atlas != null and ArenaScenery.grass_at(Vector2(x * 32 + 16, y * 32 + 16), scenario)
+			var floor_art := scenery.texture("grass") if grass else pixel_environment.texture("floor")
 			if floor_art != null:
 				var tint := Color("697377") if x < 2 or y < 2 or x >= 62 or y >= 46 else Color.WHITE.darkened(n / 300.0)
+				if grass:
+					tint = Color(0.85, 0.62, 1.12).darkened(n / 260.0)
 				draw_texture_rect(floor_art, Rect2(p, Vector2(32, 32)), false, tint)
 				continue
 			draw_rect(Rect2(p, Vector2(31, 31)), shade)
@@ -129,6 +134,7 @@ func _draw() -> void:
 				draw_line(p + Vector2(11, 14), p + Vector2(8, 21), shade.darkened(0.2), 1)
 			if n == 9:
 				draw_rect(Rect2(p + Vector2(24, 23), Vector2(3, 2)), shade.darkened(0.25))
+	draw_ground_details(scenario)
 	# Alchemical pattern in the central courtyard.
 	var center := _world_to_canvas(Vector2(1024, 768))
 	draw_arc(center, 210, 0, TAU, 64, Color(0.25, 0.26, 0.25, 0.22), 2)
@@ -137,9 +143,18 @@ func _draw() -> void:
 		var a := Vector2.from_angle(i * TAU / 6)
 		var b := Vector2.from_angle((i + 2) * TAU / 6)
 		draw_line(center + a * 202, center + b * 202, Color(0.25, 0.26, 0.25, 0.15), 1)
+	for pond in ArenaScenery.PONDS:
+		draw_pond(pond)
 	for rect in ArenaRoom.PERMANENT:
 		draw_column(rect)
 	if preview:
+		for tree in ArenaScenery.TREES:
+			draw_tree(tree, scenario)
+		for rect in ArenaScenery.ENCLOSURES:
+			draw_enclosure(rect, scenario)
+		for point in ArenaScenery.GUARDS:
+			draw_ambient_actor(point, "knight")
+		draw_ambient(scenario)
 		draw_box(Vector2(850, 700), false)
 		draw_box(Vector2(1180, 880), false)
 		draw_wall({"rect": Rect2(1000, 685, 28, 160), "hp": 80.0, "rise": 1.0})
@@ -158,6 +173,12 @@ func _draw() -> void:
 		elif pixel_fx.has_effect(effect.kind):
 			draw_effect(effect, "behind")
 	var objects: Array = []
+	for rect in ArenaScenery.ENCLOSURES:
+		objects.append({"y": rect.end.y, "enclosure": rect})
+	for point in ArenaScenery.GUARDS:
+		objects.append({"y": point.y, "guard": point})
+	for tree in ArenaScenery.TREES:
+		objects.append({"y": tree.y, "tree": tree})
 	for box in snapshot.get("boxes", []):
 		if box.owner == 0:
 			objects.append({"y": box.pos.y, "box": box})
@@ -167,13 +188,20 @@ func _draw() -> void:
 		objects.append({"y": f.pos.y, "fighter": f, "id": id})
 	objects.sort_custom(func(a, b): return a.y < b.y)
 	for object in objects:
-		if object.has("box"):
+		if object.has("enclosure"):
+			draw_enclosure(object.enclosure, scenario)
+		elif object.has("guard"):
+			draw_ambient_actor(object.guard, "knight")
+		elif object.has("tree"):
+			draw_tree(object.tree, scenario)
+		elif object.has("box"):
 			draw_box(object.box.pos, object.box.vel.length() > 0)
 		else:
 			draw_fighter(object.fighter, object.id)
 	for effect in snapshot.get("effects", []):
 		if not effect.pending:
 			draw_effect(effect)
+	draw_ambient(scenario)
 	if snapshot.get("fighters", {}).has(local_id):
 		var f: Dictionary = snapshot.fighters[local_id]
 		var p := _world_to_canvas(shown.get(local_id, f.pos))
@@ -433,3 +461,93 @@ func draw_pixel_effect(kind: String, position: Vector2, progress: float, rotatio
 		draw_set_transform(position.round(), rotation)
 		draw_texture_rect_region(art.texture, Rect2(art.offset, art.size), art.region, Color(1, 1, 1, opacity))
 		draw_set_transform(Vector2.ZERO)
+
+func draw_ground_details(scenario: String) -> void:
+	if scenery.atlas == null:
+		return
+	var visible := Rect2(camera - get_viewport_rect().size / 2 - Vector2(64, 64), get_viewport_rect().size + Vector2(128, 128))
+	for item in scenery.decorations:
+		if not visible.has_point(item.pos) or not ArenaScenery.grass_at(item.pos, scenario):
+			continue
+		var texture := scenery.texture(item.kind)
+		if texture != null:
+			draw_texture_rect(texture, Rect2(_world_to_canvas(item.pos) - Vector2(12, 22), Vector2(24, 24)), false, Color("c0c9b0"))
+	# Worn trails: sparse stones and low grass blend the road into the garden.
+	for x in range(192, 1856, 96):
+		for side in [-1, 1]:
+			var point := Vector2(x, 768 + side * 60 + sin(x * 0.02) * 8)
+			draw_texture_rect(scenery.texture("tuft"), Rect2(_world_to_canvas(point) - Vector2(8, 12), Vector2(16, 16)), false, Color("b6be9c"))
+
+func draw_tree(world: Vector2, scenario: String) -> void:
+	var p := _world_to_canvas(world)
+	if scenery.atlas == null:
+		draw_column(Rect2(world - Vector2(14, 10), Vector2(28, 20)))
+		return
+	var pine: bool = int(world.x + world.y) % 3 == 0
+	var texture := scenery.texture("pine") if pine and scenario == "forest" else scenery.texture("tree")
+	var size := Vector2(96, 120) if pine and scenario == "forest" else Vector2(128, 176)
+	var top := p - Vector2(size.x / 2, size.y - 12)
+	var alpha := 1.0
+	# Fade the canopy while a fighter is behind it; the trunk remains an obstacle.
+	var canopy := Rect2(world - Vector2(size.x / 2, size.y - 12), size - Vector2(0, 32))
+	for id in snapshot.get("fighters", {}):
+		if canopy.grow(20).has_point(shown.get(id, snapshot.fighters[id].pos)):
+			alpha = 0.48
+	draw_set_transform(p + Vector2(5, 0), 0, Vector2(1, 0.35))
+	draw_circle(Vector2.ZERO, 32, Color(0.06, 0.12, 0.08, 0.22))
+	draw_set_transform(Vector2.ZERO)
+	var tint := Color(0.9, 0.7, 1.12) if scenario == "garden" else Color(0.8, 0.65, 1.05)
+	tint.a = alpha
+	# A subtle canopy sway is cosmetic and never moves the collision trunk.
+	var sway := sin(time * 1.2 + world.x * 0.013) * 0.7
+	draw_texture_rect(texture, Rect2(top + Vector2(sway, 0), size), false, tint)
+
+func draw_ambient(scenario: String) -> void:
+	if scenery.atlas == null:
+		return
+	# Small wind-blown leaves and pollen give the scene motion without covering aim cues.
+	for i in 22:
+		var world := Vector2(fposmod(i * 173.0 + time * 12, ArenaRoom.SIZE.x - 160) + 80, fposmod(i * 97.0 + time * 7, ArenaRoom.SIZE.y - 160) + 80)
+		var point := _world_to_canvas(world) + Vector2(0, sin(time * 2 + i) * 4)
+		var color := Color("b6bd75") if scenario == "garden" else Color("d0bb83")
+		color.a = 0.55
+		draw_line(point, point + Vector2(3, 1), color, 2)
+
+func draw_pond(rect: Rect2) -> void:
+	var p := _world_to_canvas(rect.position)
+	if scenery.texture("pond") == null:
+		draw_column(rect)
+		return
+	draw_texture_rect(scenery.texture("pond"), Rect2(p, rect.size), false, Color("b5c7c2"))
+	# Surface glints animate independently; the island is decorative and unreachable.
+	for i in 5:
+		var offset := Vector2(16 + i * 29, 150 + sin(time * 1.3 + i) * 3)
+		draw_line(p + offset, p + offset + Vector2(8, 0), Color(0.75, 0.9, 0.85, 0.25), 1)
+
+func draw_ambient_actor(world: Vector2, kind: String) -> void:
+	if not scenery.actors.has(kind):
+		return
+	var texture: Texture2D = scenery.actors[kind]
+	var frame := int(time * 8) % (15 if kind == "knight" else 6)
+	var cell := 128 if kind == "knight" else 100
+	var scale_factor := 1.0 if kind == "knight" else 2.0
+	var anchor := Vector2(68, 105) if kind == "knight" else Vector2(52, 58)
+	var p := _world_to_canvas(world)
+	draw_texture_rect_region(texture, Rect2(p - anchor * scale_factor, Vector2.ONE * cell * scale_factor), Rect2(frame * cell, 0, cell, cell))
+
+func draw_enclosure(rect: Rect2, scenario: String) -> void:
+	var p := _world_to_canvas(rect.position)
+	draw_rect(Rect2(p + Vector2(4, 6), rect.size), Color(0.07, 0.11, 0.08, 0.3))
+	for y in range(0, int(rect.size.y), 32):
+		for x in range(0, int(rect.size.x), 32):
+			draw_texture_rect(pixel_environment.texture("floor"), Rect2(p + Vector2(x, y), Vector2(mini(32, int(rect.size.x) - x), mini(32, int(rect.size.y) - y))), false, Color("a6a38d"))
+	var kind := "knight" if scenario == "garden" else ("demon" if rect.position.x < 1024 else "blood")
+	# Rear fence, animated inhabitant, then front fence: the monsters stay outside combat.
+	for x in range(8, int(rect.size.x), 20):
+		draw_rect(Rect2(p + Vector2(x, -9), Vector2(4, 16)), Color("a18960"))
+	draw_line(p + Vector2(0, -3), p + Vector2(rect.size.x, -3), Color("756247"), 3)
+	draw_ambient_actor(rect.get_center() + Vector2(0, 12), kind)
+	for x in range(8, int(rect.size.x), 20):
+		draw_rect(Rect2(p + Vector2(x, rect.size.y - 16), Vector2(4, 24)), Color("a18960"))
+	draw_line(p + Vector2(0, rect.size.y - 8), p + Vector2(rect.size.x, rect.size.y - 8), Color("756247"), 3)
+	draw_string(font, p + Vector2(4, -16), "Observador" if scenario == "garden" else "Quimera", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("e3d5b5"))

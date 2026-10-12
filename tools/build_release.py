@@ -21,7 +21,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--godot', default=os.environ.get('GODOT_BIN', 'godot'))
     parser.add_argument('--package-only', action='store_true')
-    parser.add_argument('--version', default='0.2.0')
+    parser.add_argument('--version', default='0.3.0-dev')
     args = parser.parse_args()
     BUILD.mkdir(exist_ok=True)
     if not args.package_only:
@@ -43,7 +43,7 @@ def main():
     allowed = {'.gd', '.uid', '.png', '.json', '.md', '.py', '.service', '.wav', '.tres', '.tscn', '.ttf', '.txt', '.gif', '.mp4', '.pxo', '.aseprite', '.kra', '.ora'}
     for folder in ['scripts', 'assets', 'server', 'tests', 'tools', 'docs', 'art']:
         for path in (ROOT / folder).rglob('*'):
-            if path.is_file() and path.suffix in allowed and '__pycache__' not in path.parts:
+            if path.is_file() and path.suffix in allowed and '__pycache__' not in path.parts and 'third_party' not in path.parts:
                 sources.append((path, str(path.relative_to(ROOT))))
     package(BUILD / f'Arena-Source-{args.version}.zip', sources)
 

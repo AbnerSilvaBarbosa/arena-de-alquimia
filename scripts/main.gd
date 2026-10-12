@@ -15,6 +15,7 @@ var address := "127.0.0.1"
 var port := 7000
 var input_code := ""
 var character := "Edward"
+var training_scenario := "garden"
 var notice := ""
 var input_clock := 0.0
 var last_phase := ""
@@ -36,6 +37,7 @@ var health_character_labels: Array[Label] = []
 var health_portraits: Array[TextureRect] = []
 var hp_bars: Array[ProgressBar] = []
 var stamina_bars: Array[ProgressBar] = []
+var scenario_label: Label
 var timer_label: Label
 var banner_label: Label
 var ability_labels: Array[Label] = []
@@ -87,12 +89,18 @@ func _ready() -> void:
 			status_label.text = text)
 	show_menu()
 	for arg in args:
+		if arg.begins_with("--training-scenario="):
+			var requested := arg.trim_prefix("--training-scenario=")
+			if requested in ["garden", "forest"]:
+				training_scenario = requested
 		if arg.begins_with("--capture="):
 			capture_path = arg.trim_prefix("--capture=")
 		if arg.begins_with("--capture-mode="):
 			capture_mode = arg.trim_prefix("--capture-mode=")
 	if "--train" in args or capture_mode in ["arena", "result"]:
 		start_training()
+	elif capture_mode == "training":
+		show_training()
 	elif capture_mode == "connect":
 		show_connect()
 	elif capture_mode == "options":
@@ -337,9 +345,17 @@ func show_training() -> void:
 	screen = "training"
 	clear_ui()
 	veil()
-	var box := column(panel(ui, Vector2(230, 102), Vector2(500, 336)), 16)
+	var box := column(panel(ui, Vector2(230, 66), Vector2(500, 408)), 12)
 	box.add_child(label("Escolha seu alquimista", 30))
-	box.add_child(label("Edward · mobilidade, parede e espinhos\nAlphonse · força, investida e impacto", 17, MUTED))
+	box.add_child(label("Edward · mobilidade, parede e espinhos\nAlphonse · lança, martelo e espada", 17, MUTED))
+	box.add_child(label("Cenário", 14, MUTED))
+	var choice := OptionButton.new()
+	choice.add_item("Jardins de Amestris")
+	choice.add_item("Bosque das Ruínas")
+	choice.select(1 if training_scenario == "forest" else 0)
+	choice.custom_minimum_size.y = 38
+	choice.item_selected.connect(func(index): training_scenario = "forest" if index == 1 else "garden")
+	box.add_child(choice)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 12)
 	box.add_child(row)
@@ -349,7 +365,7 @@ func show_training() -> void:
 	box.add_child(button("Voltar", show_menu))
 
 func start_training() -> void:
-	net.train(character)
+	net.train(character, training_scenario)
 
 func on_lobby(data: Dictionary) -> void:
 	connection_busy = false
@@ -466,6 +482,14 @@ func show_game() -> void:
 	timer_label = label("", 22)
 	timer_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	timer_panel.add_child(timer_label)
+	scenario_label = label("", 12, TEXT)
+	scenario_label.position = Vector2(365, 92)
+	scenario_label.size = Vector2(230, 24)
+	scenario_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	scenario_label.add_theme_color_override("font_shadow_color", Color("121a21"))
+	scenario_label.add_theme_constant_override("shadow_offset_x", 2)
+	scenario_label.add_theme_constant_override("shadow_offset_y", 2)
+	hud.add_child(scenario_label)
 	banner_label = label("", 32)
 	banner_label.position = Vector2(100, 150)
 	banner_label.size = Vector2(760, 110)
@@ -548,6 +572,7 @@ func on_state(data: Dictionary) -> void:
 		health_character_labels[i].text = "%s  ·  %d %s%s" % [f.character, rounds, "round" if rounds == 1 else "rounds", " · " + {"spear": "Lança", "hammer": "Martelo", "sword": "Espada"}.get(f.get("weapon", ""), "") if f.get("weapon", "") != "" else ""]
 		hp_bars[i].value = f.hp
 		stamina_bars[i].value = f.stamina
+	scenario_label.text = ArenaScenery.scenario_name(data.get("scenario", "garden"))
 	timer_label.text = "%02d:%02d\nROUND %d" % [int(maxf(0, data.timer)) / 60, int(maxf(0, data.timer)) % 60, data.round]
 	banner_label.text = ""
 	if data.phase == "loading":

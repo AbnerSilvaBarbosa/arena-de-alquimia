@@ -17,6 +17,8 @@ var effects: Array = []
 var message := ""
 var revision := 0
 var round_number := 1
+var scenario := "garden"
+var scenario_override := ""
 var bot_id := 0
 var bot_clock := 0.0
 var action_clock := 0.0
@@ -80,6 +82,7 @@ func loaded(id: int) -> void:
 		revision += 1
 
 func reset_round() -> void:
+	scenario = scenario_override if scenario_override in ["garden", "forest"] else ("garden" if round_number % 2 == 1 else "forest")
 	fighters.clear()
 	inputs.clear()
 	walls.clear()
@@ -107,6 +110,7 @@ func set_input(id: int, move: Vector2, aim: Vector2, guard: bool) -> void:
 
 func obstacle_rects() -> Array:
 	var rects: Array = PERMANENT.duplicate()
+	rects.append_array(ArenaScenery.solid_rects())
 	for wall in walls:
 		rects.append(wall.rect)
 	for box in boxes:
@@ -308,7 +312,7 @@ func segment_hits_rect(a: Vector2, b: Vector2, rect: Rect2) -> bool:
 	return false
 
 func clear_path(a: Vector2, b: Vector2) -> bool:
-	for rect in PERMANENT:
+	for rect in PERMANENT + ArenaScenery.solid_rects():
 		if Geometry2D.segment_intersects_segment(a, b, rect.position, Vector2(rect.end.x, rect.position.y)) != null or Geometry2D.segment_intersects_segment(a, b, rect.position, Vector2(rect.position.x, rect.end.y)) != null or Geometry2D.segment_intersects_segment(a, b, rect.end, Vector2(rect.end.x, rect.position.y)) != null or Geometry2D.segment_intersects_segment(a, b, rect.end, Vector2(rect.position.x, rect.end.y)) != null:
 			return false
 	for wall in walls:
@@ -457,7 +461,7 @@ func tick(delta: float) -> void:
 			box.pos += box.vel * delta / steps
 			if box.pos.x < 64 or box.pos.y < 64 or box.pos.x > SIZE.x - 64 or box.pos.y > SIZE.y - 64:
 				broken = true
-			for rect in PERMANENT:
+			for rect in PERMANENT + ArenaScenery.solid_rects():
 				if rect.grow(10).has_point(box.pos):
 					broken = true
 			for wall in walls:
@@ -481,7 +485,7 @@ func tick(delta: float) -> void:
 		for step in steps:
 			var next: Vector2 = spear.pos + spear.vel * delta / steps
 			var stop: bool = next.x < 70 or next.y < 70 or next.x > SIZE.x - 70 or next.y > SIZE.y - 70
-			for rect in PERMANENT:
+			for rect in PERMANENT + ArenaScenery.solid_rects():
 				stop = stop or rect.grow(6).has_point(next)
 			for wall in walls:
 				if wall.rect.grow(6).has_point(next):
@@ -574,4 +578,4 @@ func lobby_data() -> Dictionary:
 	return {"code": code, "members": members.duplicate(true), "phase": phase, "message": message, "scores": scores.duplicate(), "revision": revision}
 
 func snapshot() -> Dictionary:
-	return {"code": code, "fighters": fighters.duplicate(true), "boxes": boxes.duplicate(true), "spears": spears.duplicate(true), "walls": walls.duplicate(true), "effects": effects.duplicate(true), "phase": phase, "timer": timer, "scores": scores.duplicate(), "round": round_number, "message": message, "revision": revision}
+	return {"code": code, "fighters": fighters.duplicate(true), "boxes": boxes.duplicate(true), "spears": spears.duplicate(true), "walls": walls.duplicate(true), "effects": effects.duplicate(true), "phase": phase, "timer": timer, "scores": scores.duplicate(), "round": round_number, "scenario": scenario, "message": message, "revision": revision}

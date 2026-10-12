@@ -10,6 +10,8 @@ func _initialize() -> void:
 	root.add_child(main)
 	call_deferred("begin")
 func begin() -> void:
+	if "--forest" in OS.get_cmdline_user_args():
+		main.training_scenario = "forest"
 	main.start_training()
 	main.set_process(false)
 func _process(delta: float) -> bool:

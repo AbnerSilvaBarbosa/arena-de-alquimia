@@ -9,3 +9,6 @@ __pycache__/
 .local/
 .impeccable/review/
 docs/media/*.import
+
+# Third-party artwork stays local; use tools/import_woods.py to install the pack.
+assets/third_party/

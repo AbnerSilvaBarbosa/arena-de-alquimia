@@ -15,3 +15,11 @@ Os protagonistas continuam usando os assets PixelLab existentes. Nenhum arquivo 
 - [zedpxl, página oficial](https://zedpxl.itch.io/pixelart-forest-asset-pack): permite projetos comerciais e não comerciais, mas proíbe redistribuição e contém uma restrição mais ampla a coisas relacionadas a IA. Como o jogo já contém arte gerada por IA, o pack de floresta fica fora da integração até esclarecer esse ponto com o autor.
 
 Não foram geradas novas artes pagas. Esta versão reutiliza as animações de conjuração dos personagens e os efeitos PixelLab existentes. As três armas são visuais provisórios desenhados pelo renderer, animados separadamente do corpo; ainda não são sprites exclusivos de arma feitos no PixelLab.
+
+## Integração local dos cenários — 0.3.0-dev
+
+A pedido do usuário, o atlas Woods foi incorporado diretamente ao protótipo local, sem modificação dos PNGs ou envio a serviços de IA. Árvores, vegetação, pedras e lagos compõem Jardins de Amestris e Bosque das Ruínas. Knight Idle é usado para observadores; Demon Idle e Blood Monster Idle são habitantes de áreas cercadas, sem IA de combate.
+
+A restrição ampla da licença Woods continua sem esclarecimento; esta integração local não resolve a autorização para distribuição de uma nova release contendo esse pack. Os quatro PNGs estão em `assets/third_party`, ignorados pelo Git e excluídos dos ZIPs de código-fonte. Não foi publicada uma release com eles.
+
+As fontes originais permanecem nas pastas fornecidas pelo usuário. O importador local está em `tools/import_scenery.py`.
