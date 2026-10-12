@@ -1,0 +1,5 @@
+extends "res://src/Main.gd"
+
+## Compile only inside Pixelorama.pck, not inside the game project's editor.
+func _handle_cmdline_arguments() -> void:
+	pass

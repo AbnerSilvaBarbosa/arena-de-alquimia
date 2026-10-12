@@ -16,6 +16,14 @@ Sequência automatizada de 13 segundos, gravada no renderer do Godot com a simul
 
 ## Pixel arts e animações
 
+### Primeiro estudo desenhado localmente
+
+![Estudo local: pose de Edward em 128 × 128 e tileset do pátio no Godot](docs/media/local-art-study.png)
+
+Produzido localmente com a API do Pixelorama: [Edward editável, 128 × 128](art/source/characters/edward_idle_128_study.pxo) e [atlas editável com 16 peças de 64 × 64](art/source/environment/amestris_tiles_64_study.pxo). Os `.pxo` preservam oito e cinco camadas, respectivamente. Esta é uma pose estática e uma montagem de estudo em TileMapLayer, ainda sem animações novas ou integração ao combate. [Fluxo e peças do atlas](art/source/LOCAL_STUDY.md).
+
+### Animações presentes no MVP
+
 ![Edward e Alphonse: prévia dos sprites e dos sete efeitos do PixelLab](docs/media/assets.gif)
 
 [Vídeo dos assets em MP4](docs/media/assets.mp4) · [Galeria estática ampliada](docs/media/pixel-art.png) · [Detalhes e origem dos assets](assets/pixellab/README.md)

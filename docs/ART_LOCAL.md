@@ -8,7 +8,7 @@ Objetivo confirmado: personagens maiores na tela agora e arte futura em **128 ×
 
 O [manual de tilesets](https://pixelorama.org/user_manual/tilemaps/) descreve tilemap layers, autotiling e exportação de TileSet do Godot em `.tres`. Os [projetos editáveis são `.pxo`](https://pixelorama.org/user_manual/save_and_export/); PNG/spritesheets são as entregas para o jogo. Há também [exportação por linha de comando](https://pixelorama.org/user_manual/cli/), útil para automatizar o trabalho depois que os arquivos editáveis existirem.
 
-Download oficial: [GitHub Releases](https://github.com/Orama-Interactive/Pixelorama/releases). Selecionar a distribuição Mac da versão estável e seguir o guia oficial de instalação. Esta etapa de pesquisa não instalou o aplicativo.
+Download oficial: [GitHub Releases](https://github.com/Orama-Interactive/Pixelorama/releases). Selecionar a distribuição Mac da versão estável e seguir o guia oficial de instalação. O usuário instalou Pixelorama 1.2.3 em 12/10/2026. O primeiro lote local editável está documentado em [art/source/LOCAL_STUDY.md](../art/source/LOCAL_STUDY.md).
 
 ### Alternativas pesquisadas
 

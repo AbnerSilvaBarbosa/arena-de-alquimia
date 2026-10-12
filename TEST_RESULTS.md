@@ -36,3 +36,7 @@ Exports Windows e Linux concluídos sem erros. Varredura do projeto e dos arquiv
 O cliente 0.1.1 exportado, carregado como main-pack pelo Godot no Mac, passou nas 29 verificações de câmera e nas 1.083 verificações de assets. Exportação Windows/Linux concluída sem erros. Execução nativa em Windows/Linux continua pendente.
 
 Servidor 0.1.1 empacotado: partida 2–0 e revanche aprovadas nos dois clientes, com 361/363 snapshots recebidos, 100 ms RTT e 1% de perda. Rejeições de sala cheia, código inexistente e protocolo incompatível também aprovadas.
+
+## Primeiro lote Pixelorama local — 12/10/2026
+
+Edward 128 × 128 com oito camadas e atlas 256 × 256 com cinco camadas salvos em `.pxo` pela API do Pixelorama 1.2.3. Ambos reabertos na GUI; exportados pela CLI com comparação RGBA idêntica aos PNGs. Reprodução em pasta separada também preservou os pixels. Dezesseis peças individuais conferidas em 64 × 64. Prévia estática renderizada no Godot com TileMapLayer e Sprite2D; sem combate/colisões/animação nesta cena. Nenhuma alteração no renderer ou servidor do MVP. O import do projeto Godot não apresentou erros de script. Diagnósticos headless da ferramenta estão descritos em art/source/LOCAL_STUDY.md.

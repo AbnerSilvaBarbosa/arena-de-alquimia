@@ -40,7 +40,7 @@ def main():
     design_record = ROOT / '.impeccable/design.json'
     if design_record.exists():
         sources.append((design_record, '.impeccable/design.json'))
-    allowed = {'.gd', '.uid', '.png', '.json', '.md', '.py', '.service', '.wav', '.tres', '.ttf', '.txt', '.gif', '.mp4', '.pxo', '.aseprite', '.kra', '.ora'}
+    allowed = {'.gd', '.uid', '.png', '.json', '.md', '.py', '.service', '.wav', '.tres', '.tscn', '.ttf', '.txt', '.gif', '.mp4', '.pxo', '.aseprite', '.kra', '.ora'}
     for folder in ['scripts', 'assets', 'server', 'tests', 'tools', 'docs', 'art']:
         for path in (ROOT / folder).rglob('*'):
             if path.is_file() and path.suffix in allowed and '__pycache__' not in path.parts:

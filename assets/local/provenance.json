@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-12",
+  "tool": "Pixelorama 1.2.3",
+  "method": "Authored pixel commands through ExtensionsApi, OpenSave and DrawingAlgos; local Pixelorama.pck loaded with Godot 4.7.2.",
+  "generator": "tools/draw_local_art.gd",
+  "ai_generated": false,
+  "status": "static art study, not integrated into multiplayer gameplay",
+  "character": {
+    "source": "art/source/characters/edward_idle_128_study.pxo",
+    "size": [
+      128,
+      128
+    ],
+    "layers": 8,
+    "frames": 1
+  },
+  "environment": {
+    "source": "art/source/environment/amestris_tiles_64_study.pxo",
+    "atlas_size": [
+      256,
+      256
+    ],
+    "tile_size": [
+      64,
+      64
+    ],
+    "tiles": 16,
+    "layers": 5
+  }
+}

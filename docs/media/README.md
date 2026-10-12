@@ -22,3 +22,5 @@ ffmpeg -i /tmp/assets.avi -c:v libx264 -crf 21 -pix_fmt yuv420p -movflags +fasts
 ```
 
 PNG, GIF e MP4 da documentação ficam fora dos executáveis do jogo. O pacote de código-fonte inclui esta galeria, e o pacote Windows inclui as mídias referenciadas pelo README.
+
+`local-art-study.png`: prévia estática renderizada no Godot com uma pose 128 × 128 e um atlas local de 16 peças 64 × 64. Artes autoradas por comandos de pixels e salvas/exportadas com a API do Pixelorama, com camadas editáveis em `art/source`. Essa cena de estudo não contém combate ou novas animações.
